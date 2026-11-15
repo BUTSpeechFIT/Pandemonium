@@ -1,0 +1,24 @@
+# Ladder rung 6: + 5 minute training chunk.
+#
+# As the rungs before it, one step further: 300 s is 3750 encoder frames, or roughly seven
+# sliding windows end to end. NOTSOFAR sessions are 6-8 minutes, so this is the first rung where
+# a NOTSOFAR item is a genuine window of a session rather than most of one.
+defaults:
+  - dicop_l5_ctc_120s
+  - _self_
+
+name: dicop_l6_ctc_300s
+
+model:
+  train_ds:
+    manifest_filepath:
+      - ${oc.env:MANIFEST_DIR}/notsofar1/notsofar1_sdm_train_set_240825.1_train_cutset_300s.jsonl.gz
+      - ${oc.env:MANIFEST_DIR}/ami/ami-sdm_cutset_train_300s.jsonl.gz
+      - ${oc.env:MANIFEST_DIR}/librimix/librimix_cutset_libri2mix_train-clean-100_noisy_30s.jsonl.gz
+      - ${oc.env:MANIFEST_DIR}/librimix/librimix_cutset_libri2mix_train-clean-360_noisy_30s.jsonl.gz
+      - ${oc.env:MANIFEST_DIR}/librimix/librimix_cutset_libri3mix_train-clean-360_noisy_30s.jsonl.gz
+      - ${oc.env:MANIFEST_DIR}/librispeechmix/librispeechmix_custom_cutset_train-3mix.jsonl.gz
+
+trainer:
+  # 1000/300 = 3 items per GPU, so 4 GPUs give 12 per step; x3 clears the 32 floor at 36.
+  accumulate_grad_batches: 3

@@ -1,0 +1,1328 @@
+[
+ {
+  "speaker": 0,
+  "start": 16.96,
+  "end": 17.04,
+  "text": "oh"
+ },
+ {
+  "speaker": 0,
+  "start": 18.240000000000002,
+  "end": 19.04,
+  "text": "how does that work"
+ },
+ {
+  "speaker": 1,
+  "start": 22.96,
+  "end": 24.560000000000002,
+  "text": "the microphone is supposed to be to your ro"
+ },
+ {
+  "speaker": 0,
+  "start": 25.68,
+  "end": 26.400000000000002,
+  "text": "right sure"
+ },
+ {
+  "speaker": 1,
+  "start": 27.2,
+  "end": 27.36,
+  "text": "ohah"
+ },
+ {
+  "speaker": 0,
+  "start": 28.080000000000002,
+  "end": 29.76,
+  "text": "and then where is the other one up here"
+ },
+ {
+  "speaker": 0,
+  "start": 54.96,
+  "end": 56.64,
+  "text": "ok everybody ready"
+ },
+ {
+  "speaker": 1,
+  "start": 55.6,
+  "end": 55.68,
+  "text": "ok"
+ },
+ {
+  "speaker": 1,
+  "start": 57.120000000000005,
+  "end": 57.6,
+  "text": "i think so"
+ },
+ {
+  "speaker": 0,
+  "start": 58.0,
+  "end": 60.72,
+  "text": "i think the first thing we do is introduce ourselves"
+ },
+ {
+  "speaker": 1,
+  "start": 61.28,
+  "end": 62.24,
+  "text": "yeah that is a good plan"
+ },
+ {
+  "speaker": 0,
+  "start": 62.08,
+  "end": 67.2,
+  "text": "and his name and what your function is so maybe m st with you"
+ },
+ {
+  "speaker": 2,
+  "start": 66.64,
+  "end": 72.08,
+  "text": "ok yeah my name is franc and i am an user interface my role is"
+ },
+ {
+  "speaker": 2,
+  "start": 73.12,
+  "end": 80.48,
+  "text": "the main responsibility is user interface and my role is to design a television remote control"
+ },
+ {
+  "speaker": 0,
+  "start": 81.68,
+  "end": 81.76,
+  "text": "ok"
+ },
+ {
+  "speaker": 1,
+  "start": 83.36,
+  "end": 86.96000000000001,
+  "text": "and i am a marketing person i want to figure out how to sell them"
+ },
+ {
+  "speaker": 0,
+  "start": 87.84,
+  "end": 88.56,
+  "text": "and your name is"
+ },
+ {
+  "speaker": 1,
+  "start": 88.72,
+  "end": 89.60000000000001,
+  "text": "my name is eileen"
+ },
+ {
+  "speaker": 0,
+  "start": 90.16,
+  "end": 90.24,
+  "text": "ok"
+ },
+ {
+  "speaker": 3,
+  "start": 91.12,
+  "end": 97.60000000000001,
+  "text": "yeah i am jvi i my role is industrial designer and my responsibilities are"
+ },
+ {
+  "speaker": 3,
+  "start": 100.32000000000001,
+  "end": 107.28,
+  "text": "deal with technical functional designs and specifications of user interface and dealing with user interface design"
+ },
+ {
+  "speaker": 0,
+  "start": 107.84,
+  "end": 118.08,
+  "text": "very good and as you already know i am betty i am the project manager for today so why do not we look at the presentation to see what we really are supposed to do"
+ },
+ {
+  "speaker": 1,
+  "start": 118.72,
+  "end": 118.8,
+  "text": "ok"
+ },
+ {
+  "speaker": 0,
+  "start": 122.32000000000001,
+  "end": 140.64000000000001,
+  "text": "bas is opening acquaintance tool training well the tools i think we already i guess the tool is really our the computer as far as i can see we get inst each of us will get instructions and we will take it from there project plan that falls under the same heading pretty much"
+ },
+ {
+  "speaker": 0,
+  "start": 141.76,
+  "end": 144.8,
+  "text": "i do not think we have any great discussion at this point"
+ },
+ {
+  "speaker": 1,
+  "start": 145.44,
+  "end": 145.6,
+  "text": "yeah"
+ },
+ {
+  "speaker": 0,
+  "start": 149.52,
+  "end": 152.72,
+  "text": "here is what this thing should be this thing we are going to"
+ },
+ {
+  "speaker": 0,
+  "start": 154.4,
+  "end": 156.48,
+  "text": "design is a new remote control"
+ },
+ {
+  "speaker": 0,
+  "start": 157.76,
+  "end": 158.64000000000001,
+  "text": "should be original"
+ },
+ {
+  "speaker": 0,
+  "start": 159.68,
+  "end": 162.24,
+  "text": "trendy and of course user friendly"
+ },
+ {
+  "speaker": 0,
+  "start": 165.04,
+  "end": 166.8,
+  "text": "so maybe you i to make some notes of that"
+ },
+ {
+  "speaker": 0,
+  "start": 188.0,
+  "end": 188.08,
+  "text": "ok"
+ },
+ {
+  "speaker": 0,
+  "start": 195.04,
+  "end": 195.12,
+  "text": "ok"
+ },
+ {
+  "speaker": 1,
+  "start": 195.52,
+  "end": 195.6,
+  "text": "ye"
+ },
+ {
+  "speaker": 0,
+  "start": 196.32,
+  "end": 201.28,
+  "text": "alright here is what the functional design is supposed to achieve"
+ },
+ {
+  "speaker": 0,
+  "start": 203.76,
+  "end": 208.08,
+  "text": "that is it is going to be individual work and then at the meeting we will discuss what"
+ },
+ {
+  "speaker": 0,
+  "start": 209.92000000000002,
+  "end": 218.08,
+  "text": "we have come up with the same goes for the conceptual design there will be individual work we and then discussion afterwards"
+ },
+ {
+  "speaker": 0,
+  "start": 219.36,
+  "end": 222.0,
+  "text": "detailed design same thing basically"
+ },
+ {
+  "speaker": 1,
+  "start": 220.48000000000002,
+  "end": 221.04,
+  "text": "ok so"
+ },
+ {
+  "speaker": 1,
+  "start": 222.64000000000001,
+  "end": 225.76,
+  "text": "three different types of design that we are going to be concerned with"
+ },
+ {
+  "speaker": 1,
+  "start": 236.0,
+  "end": 238.0,
+  "text": "oh su conception"
+ },
+ {
+  "speaker": 0,
+  "start": 243.76,
+  "end": 245.04,
+  "text": "i can not i use this thing"
+ },
+ {
+  "speaker": 1,
+  "start": 248.16,
+  "end": 249.36,
+  "text": "maybe we should redesign it"
+ },
+ {
+  "speaker": 0,
+  "start": 249.68,
+  "end": 249.84,
+  "text": "yeah"
+ },
+ {
+  "speaker": 0,
+  "start": 251.68,
+  "end": 251.92000000000002,
+  "text": "yes"
+ },
+ {
+  "speaker": 1,
+  "start": 252.64000000000001,
+  "end": 254.8,
+  "text": "after we have finished the remote control we will get to that"
+ },
+ {
+  "speaker": 0,
+  "start": 257.28000000000003,
+  "end": 257.6,
+  "text": "alright"
+ },
+ {
+  "speaker": 0,
+  "start": 259.92,
+  "end": 272.56,
+  "text": "then tool training try at the whiteboard person control their favorite animal does anybody want to go and see how the whiteboard works so that in case we have to in the next meeting present something on the whiteboard"
+ },
+ {
+  "speaker": 0,
+  "start": 274.56,
+  "end": 275.84000000000003,
+  "text": "you want to go eileen and"
+ },
+ {
+  "speaker": 1,
+  "start": 276.16,
+  "end": 277.36,
+  "text": "ok i will see what i can do"
+ },
+ {
+  "speaker": 0,
+  "start": 277.52,
+  "end": 279.76,
+  "text": "whether you without hanging yourself"
+ },
+ {
+  "speaker": 1,
+  "start": 278.40000000000003,
+  "end": 278.8,
+  "text": "see if i"
+ },
+ {
+  "speaker": 1,
+  "start": 280.0,
+  "end": 283.68,
+  "text": "see if i remember how to draw a kittdy cat or a rabbit or something"
+ },
+ {
+  "speaker": 0,
+  "start": 288.0,
+  "end": 290.32,
+  "text": "and remember you have to press so it works"
+ },
+ {
+  "speaker": 1,
+  "start": 290.08,
+  "end": 291.68,
+  "text": "so but it will not more effecally"
+ },
+ {
+  "speaker": 1,
+  "start": 293.36,
+  "end": 293.44,
+  "text": "oh"
+ },
+ {
+  "speaker": 1,
+  "start": 295.6,
+  "end": 296.24,
+  "text": "traditional"
+ },
+ {
+  "speaker": 1,
+  "start": 297.36,
+  "end": 297.44,
+  "text": "cat"
+ },
+ {
+  "speaker": 0,
+  "start": 307.76,
+  "end": 309.68,
+  "text": "oh that is a fat cat"
+ },
+ {
+  "speaker": 1,
+  "start": 311.12,
+  "end": 312.32,
+  "text": "i have a very fat cat"
+ },
+ {
+  "speaker": 1,
+  "start": 315.6,
+  "end": 318.16,
+  "text": "and it likes to sit like that ok"
+ },
+ {
+  "speaker": 0,
+  "start": 317.6,
+  "end": 317.68,
+  "text": "ok"
+ },
+ {
+  "speaker": 0,
+  "start": 320.48,
+  "end": 324.16,
+  "text": "and your front scene right would you like like just to see"
+ },
+ {
+  "speaker": 2,
+  "start": 322.08,
+  "end": 323.28000000000003,
+  "text": "yes i am fancing it"
+ },
+ {
+  "speaker": 3,
+  "start": 324.32,
+  "end": 324.96,
+  "text": "yes share"
+ },
+ {
+  "speaker": 0,
+  "start": 325.28000000000003,
+  "end": 327.44,
+  "text": "how it feels so that you have a little idea"
+ },
+ {
+  "speaker": 1,
+  "start": 328.64,
+  "end": 330.32,
+  "text": "am i supposed to wipe off that or"
+ },
+ {
+  "speaker": 0,
+  "start": 330.16,
+  "end": 331.36,
+  "text": "no no no that is ok"
+ },
+ {
+  "speaker": 3,
+  "start": 331.52,
+  "end": 332.0,
+  "text": "yeah ok"
+ },
+ {
+  "speaker": 1,
+  "start": 332.32,
+  "end": 332.40000000000003,
+  "text": "ok"
+ },
+ {
+  "speaker": 0,
+  "start": 333.44,
+  "end": 335.52,
+  "text": "i doun know get to that later"
+ },
+ {
+  "speaker": 1,
+  "start": 336.0,
+  "end": 336.08,
+  "text": "ok"
+ },
+ {
+  "speaker": 3,
+  "start": 337.44,
+  "end": 337.92,
+  "text": "pictuent"
+ },
+ {
+  "speaker": 0,
+  "start": 347.44,
+  "end": 347.6,
+  "text": "it is"
+ },
+ {
+  "speaker": 3,
+  "start": 347.92,
+  "end": 349.12,
+  "text": "i am going to rustly"
+ },
+ {
+  "speaker": 0,
+  "start": 356.32,
+  "end": 356.40000000000003,
+  "text": "my"
+ },
+ {
+  "speaker": 1,
+  "start": 357.52,
+  "end": 357.6,
+  "text": "ok"
+ },
+ {
+  "speaker": 1,
+  "start": 359.92,
+  "end": 362.32,
+  "text": "butope the kittie cat is hungry cause i do not like snakes"
+ },
+ {
+  "speaker": 0,
+  "start": 360.0,
+  "end": 360.08,
+  "text": "ok"
+ },
+ {
+  "speaker": 0,
+  "start": 362.08,
+  "end": 362.24,
+  "text": "yeah"
+ },
+ {
+  "speaker": 0,
+  "start": 367.2,
+  "end": 372.0,
+  "text": "here is the project finance which of course we all have to think about when we design this thing"
+ },
+ {
+  "speaker": 0,
+  "start": 373.44,
+  "end": 375.6,
+  "text": "selling price is supposed to be twenty five euro"
+ },
+ {
+  "speaker": 0,
+  "start": 377.6,
+  "end": 381.04,
+  "text": "profit aim for the company is fifty million euro"
+ },
+ {
+  "speaker": 0,
+  "start": 382.72,
+  "end": 385.76,
+  "text": "the market range unlimited meaning international"
+ },
+ {
+  "speaker": 1,
+  "start": 386.48,
+  "end": 386.72,
+  "text": "oky"
+ },
+ {
+  "speaker": 0,
+  "start": 387.28000000000003,
+  "end": 393.28000000000003,
+  "text": "and the production cost should not exceed hopefully should be less than twelve fifty euro"
+ },
+ {
+  "speaker": 1,
+  "start": 395.36,
+  "end": 398.48,
+  "text": "ka and that should keep everybody on their toes unchallenged"
+ },
+ {
+  "speaker": 1,
+  "start": 400.16,
+  "end": 400.56,
+  "text": "profit"
+ },
+ {
+  "speaker": 1,
+  "start": 402.8,
+  "end": 404.64,
+  "text": "m is fifty"
+ },
+ {
+  "speaker": 0,
+  "start": 403.84000000000003,
+  "end": 412.56,
+  "text": "so these are all things of course to remember is a budget and when you design to materials cost etcetera"
+ },
+ {
+  "speaker": 0,
+  "start": 419.12,
+  "end": 421.6,
+  "text": "now the discussion i guess is"
+ },
+ {
+  "speaker": 1,
+  "start": 419.84000000000003,
+  "end": 420.40000000000003,
+  "text": "interesting"
+ },
+ {
+  "speaker": 0,
+  "start": 423.12,
+  "end": 427.12,
+  "text": "does any one of you have experience with remote control"
+ },
+ {
+  "speaker": 3,
+  "start": 428.56,
+  "end": 431.36,
+  "text": "yeah of course use remote control yeah"
+ },
+ {
+  "speaker": 0,
+  "start": 429.04,
+  "end": 432.32,
+  "text": "ex you said we we use em we use em right every day"
+ },
+ {
+  "speaker": 2,
+  "start": 429.68,
+  "end": 429.84000000000003,
+  "text": "yes"
+ },
+ {
+  "speaker": 0,
+  "start": 433.36,
+  "end": 433.44,
+  "text": "and"
+ },
+ {
+  "speaker": 0,
+  "start": 436.56,
+  "end": 448.96000000000004,
+  "text": "now having used a remote control for years does anybody already have like an idea like things you did not like with it things you would like to change things you would like to improve with this thing ye any first ideas"
+ },
+ {
+  "speaker": 0,
+  "start": 450.24,
+  "end": 452.8,
+  "text": "would you like it to be smaller bigger"
+ },
+ {
+  "speaker": 2,
+  "start": 453.76,
+  "end": 454.16,
+  "text": "yeah i"
+ },
+ {
+  "speaker": 0,
+  "start": 454.0,
+  "end": 460.48,
+  "text": "have more have more buttons on it or maybe clearly better marked buttons you know things like that"
+ },
+ {
+  "speaker": 3,
+  "start": 461.28000000000003,
+  "end": 461.44,
+  "text": "yeah"
+ },
+ {
+  "speaker": 2,
+  "start": 461.36,
+  "end": 468.8,
+  "text": "yes i i feel that all the remotes should be very compact yeah those which we get here nowadays it is very long"
+ },
+ {
+  "speaker": 0,
+  "start": 465.28000000000003,
+  "end": 465.76,
+  "text": "small right"
+ },
+ {
+  "speaker": 2,
+  "start": 469.84000000000003,
+  "end": 486.32,
+  "text": "and and it should have multi purpose like the remote control which we use for t v it shou it should be used f for some other purpose also like controlling the temperature inside the house or for air conditioners or for heating system"
+ },
+ {
+  "speaker": 3,
+  "start": 481.6,
+  "end": 482.72,
+  "text": "or t v oh"
+ },
+ {
+  "speaker": 0,
+  "start": 486.64,
+  "end": 492.40000000000003,
+  "text": "so it should be a multifunctional gadget that would control all your household"
+ },
+ {
+  "speaker": 2,
+  "start": 488.40000000000003,
+  "end": 488.64,
+  "text": "yes"
+ },
+ {
+  "speaker": 3,
+  "start": 489.12,
+  "end": 489.52,
+  "text": "exactly"
+ },
+ {
+  "speaker": 2,
+  "start": 489.84000000000003,
+  "end": 490.08,
+  "text": "yes"
+ },
+ {
+  "speaker": 2,
+  "start": 492.56,
+  "end": 492.72,
+  "text": "yes"
+ },
+ {
+  "speaker": 3,
+  "start": 492.64,
+  "end": 493.04,
+  "text": "i think"
+ },
+ {
+  "speaker": 0,
+  "start": 494.0,
+  "end": 495.04,
+  "text": "machines basically"
+ },
+ {
+  "speaker": 2,
+  "start": 494.64,
+  "end": 495.6,
+  "text": "yeah exactly"
+ },
+ {
+  "speaker": 3,
+  "start": 495.2,
+  "end": 495.36,
+  "text": "yeah"
+ },
+ {
+  "speaker": 1,
+  "start": 497.28000000000003,
+  "end": 497.36,
+  "text": "at"
+ },
+ {
+  "speaker": 1,
+  "start": 498.40000000000003,
+  "end": 500.56,
+  "text": "twelve fifty euros per"
+ },
+ {
+  "speaker": 0,
+  "start": 502.72,
+  "end": 502.8,
+  "text": "well"
+ },
+ {
+  "speaker": 1,
+  "start": 503.6,
+  "end": 506.8,
+  "text": "well only knows if we get a really good decider maybe we can do that"
+ },
+ {
+  "speaker": 3,
+  "start": 506.08,
+  "end": 506.24,
+  "text": "yeah"
+ },
+ {
+  "speaker": 1,
+  "start": 508.16,
+  "end": 513.28,
+  "text": "we certainly can try to i agree with her that to market something successfully it should do some more things"
+ },
+ {
+  "speaker": 0,
+  "start": 513.12,
+  "end": 520.8,
+  "text": "it should be something new it should be it should do something different than than just what we have now of course the other thing to think there is maybe the design"
+ },
+ {
+  "speaker": 1,
+  "start": 517.28,
+  "end": 517.6,
+  "text": "that is right"
+ },
+ {
+  "speaker": 3,
+  "start": 517.76,
+  "end": 517.92,
+  "text": "yeah"
+ },
+ {
+  "speaker": 2,
+  "start": 518.16,
+  "end": 518.4,
+  "text": "yes"
+ },
+ {
+  "speaker": 2,
+  "start": 520.96,
+  "end": 525.28,
+  "text": "yeah design should be yeah it should be different all the almost all the remotes"
+ },
+ {
+  "speaker": 0,
+  "start": 524.16,
+  "end": 532.8,
+  "text": "like trendy you know like earlier we saw maybe it should be something trendy you know maybe should different colors or materials or you know"
+ },
+ {
+  "speaker": 2,
+  "start": 527.76,
+  "end": 528.64,
+  "text": "yes exactly"
+ },
+ {
+  "speaker": 3,
+  "start": 527.76,
+  "end": 532.8,
+  "text": "yeah maybe we a little bit trendier a lot s shapes also yeah"
+ },
+ {
+  "speaker": 2,
+  "start": 530.64,
+  "end": 532.5600000000001,
+  "text": "a shapes yes"
+ },
+ {
+  "speaker": 0,
+  "start": 534.08,
+  "end": 538.64,
+  "text": "so yeah shapes right you know like kidney shaped feels better in your hand or something you know"
+ },
+ {
+  "speaker": 2,
+  "start": 537.04,
+  "end": 537.2,
+  "text": "yes"
+ },
+ {
+  "speaker": 3,
+  "start": 537.84,
+  "end": 537.92,
+  "text": "k"
+ },
+ {
+  "speaker": 1,
+  "start": 538.32,
+  "end": 541.12,
+  "text": "yeah ok friendly shape that would help"
+ },
+ {
+  "speaker": 0,
+  "start": 539.92,
+  "end": 540.08,
+  "text": "yeah"
+ },
+ {
+  "speaker": 1,
+  "start": 542.24,
+  "end": 551.12,
+  "text": "i think another thing that would help is if it beeps when you clap because i think one of the big things that happens is people lose them they can not find it"
+ },
+ {
+  "speaker": 0,
+  "start": 544.08,
+  "end": 544.24,
+  "text": "yes"
+ },
+ {
+  "speaker": 0,
+  "start": 552.48,
+  "end": 573.36,
+  "text": "that is true because they put the newspaper or they put it behind a plant or we know whatever and and they suddenly the phone rings and they want to turn the t v off and say where the hell is my my remote control yeah well or yeah or if it is really if it is really in a dark spot that it gives out a a sound or a signal yeah"
+ },
+ {
+  "speaker": 3,
+  "start": 555.6800000000001,
+  "end": 555.84,
+  "text": "yeah"
+ },
+ {
+  "speaker": 1,
+  "start": 566.0,
+  "end": 566.32,
+  "text": "so so"
+ },
+ {
+  "speaker": 3,
+  "start": 571.92,
+  "end": 574.5600000000001,
+  "text": "it some beep or something like that so that we can m"
+ },
+ {
+  "speaker": 1,
+  "start": 572.5600000000001,
+  "end": 576.48,
+  "text": "a sound so it should either beep bo a light should blink"
+ },
+ {
+  "speaker": 0,
+  "start": 574.72,
+  "end": 575.52,
+  "text": "so if lost"
+ },
+ {
+  "speaker": 0,
+  "start": 576.72,
+  "end": 577.44,
+  "text": "if lost"
+ },
+ {
+  "speaker": 3,
+  "start": 576.72,
+  "end": 576.88,
+  "text": "yeah"
+ },
+ {
+  "speaker": 2,
+  "start": 577.04,
+  "end": 577.36,
+  "text": "should have"
+ },
+ {
+  "speaker": 2,
+  "start": 578.48,
+  "end": 580.08,
+  "text": "a th signal yeah"
+ },
+ {
+  "speaker": 0,
+  "start": 578.72,
+  "end": 579.12,
+  "text": "signal"
+ },
+ {
+  "speaker": 0,
+  "start": 580.16,
+  "end": 581.2,
+  "text": "throw signal you know"
+ },
+ {
+  "speaker": 3,
+  "start": 580.24,
+  "end": 587.84,
+  "text": "yeah yeah maybe it should have a light so that we can we can just recognize where it is yeah may not be beep"
+ },
+ {
+  "speaker": 1,
+  "start": 580.5600000000001,
+  "end": 580.72,
+  "text": "yeah"
+ },
+ {
+  "speaker": 0,
+  "start": 585.6800000000001,
+  "end": 592.24,
+  "text": "exactly i mean just that is why i am saying i am just saying throw signal meaning just whether it is a beep or whether a light or"
+ },
+ {
+  "speaker": 3,
+  "start": 590.8000000000001,
+  "end": 592.96,
+  "text": "beep or it is a light or it is a light"
+ },
+ {
+  "speaker": 1,
+  "start": 592.16,
+  "end": 593.44,
+  "text": "and do you think a good c"
+ },
+ {
+  "speaker": 1,
+  "start": 594.48,
+  "end": 595.28,
+  "text": "clue for"
+ },
+ {
+  "speaker": 1,
+  "start": 596.4,
+  "end": 605.6800000000001,
+  "text": "that is that it would respond to a clap or it would respond to your voice or it would respond what what should you have to do to make it beep or blink"
+ },
+ {
+  "speaker": 0,
+  "start": 605.76,
+  "end": 613.12,
+  "text": "ok my my idea is maybe that the minute it is really hidden in in other words if it is like in a dark spot"
+ },
+ {
+  "speaker": 0,
+  "start": 614.48,
+  "end": 636.96,
+  "text": "meaning you know like your newspaper is on top a sweater is on top or it is it is behind a plant at that moment it is it is like it is like what do you call it the light s sensors you know in in that moment it has a sensor i it it gets a certain darkness it ge has a sensor and it gives out a signal whether that be a light signal or a beep i mean that we can discuss that later you know"
+ },
+ {
+  "speaker": 1,
+  "start": 625.44,
+  "end": 626.0,
+  "text": "ok so"
+ },
+ {
+  "speaker": 2,
+  "start": 627.6800000000001,
+  "end": 627.84,
+  "text": "yes"
+ },
+ {
+  "speaker": 1,
+  "start": 628.24,
+  "end": 628.32,
+  "text": "ok"
+ },
+ {
+  "speaker": 3,
+  "start": 634.24,
+  "end": 634.4,
+  "text": "yeah"
+ },
+ {
+  "speaker": 2,
+  "start": 634.8000000000001,
+  "end": 634.88,
+  "text": "ok"
+ },
+ {
+  "speaker": 3,
+  "start": 635.44,
+  "end": 637.36,
+  "text": "yeah probably it is a yeah yeah"
+ },
+ {
+  "speaker": 2,
+  "start": 638.08,
+  "end": 638.64,
+  "text": "yeah and"
+ },
+ {
+  "speaker": 1,
+  "start": 639.04,
+  "end": 641.2,
+  "text": "so the light sensor would activate the signal"
+ },
+ {
+  "speaker": 0,
+  "start": 641.28,
+  "end": 658.16,
+  "text": "that is right you know there would be right you have to have some kind of sensor and i i think voice or clapping that is not specific enough i know there are the lamps and stuff you know you can clap on and off but i think they only work to a certain degree and"
+ },
+ {
+  "speaker": 2,
+  "start": 653.76,
+  "end": 653.92,
+  "text": "yees"
+ },
+ {
+  "speaker": 1,
+  "start": 658.08,
+  "end": 661.76,
+  "text": "but it could be some place really obvious then you still would not be able to find it"
+ },
+ {
+  "speaker": 0,
+  "start": 664.0,
+  "end": 664.48,
+  "text": "what with"
+ },
+ {
+  "speaker": 3,
+  "start": 664.24,
+  "end": 666.96,
+  "text": "cour then in then in that case you we coulded"
+ },
+ {
+  "speaker": 1,
+  "start": 665.12,
+  "end": 669.44,
+  "text": "well because you are s because you are silly because people are silly i mean it could be on"
+ },
+ {
+  "speaker": 0,
+  "start": 667.6800000000001,
+  "end": 670.48,
+  "text": "oh yeah well but then those people we can not help everybody"
+ },
+ {
+  "speaker": 1,
+  "start": 670.48,
+  "end": 674.8000000000001,
+  "text": "well i if we were like on top of your bookcase and you usually kept it on the coffee table"
+ },
+ {
+  "speaker": 1,
+  "start": 677.6800000000001,
+  "end": 679.6800000000001,
+  "text": "you know maybe we have to move along ok"
+ },
+ {
+  "speaker": 0,
+  "start": 678.0,
+  "end": 683.76,
+  "text": "ok we have the yeah we have to move along but i think we have some good good points to start with here"
+ },
+ {
+  "speaker": 3,
+  "start": 682.0,
+  "end": 683.04,
+  "text": "yeah points"
+ },
+ {
+  "speaker": 0,
+  "start": 685.76,
+  "end": 693.6,
+  "text": "ok the next meeting will be in thirty minutes i think you all did you get notices on your computer for this ok so we will you got the notice"
+ },
+ {
+  "speaker": 3,
+  "start": 691.6,
+  "end": 691.76,
+  "text": "yeah"
+ },
+ {
+  "speaker": 0,
+  "start": 696.96,
+  "end": 703.84,
+  "text": "the working design i guess that is the function i d who is this the industrial designer that is you"
+ },
+ {
+  "speaker": 3,
+  "start": 702.88,
+  "end": 703.04,
+  "text": "yeah"
+ },
+ {
+  "speaker": 3,
+  "start": 704.48,
+  "end": 706.64,
+  "text": "yeah it is function yeah exactly"
+ },
+ {
+  "speaker": 0,
+  "start": 706.88,
+  "end": 710.88,
+  "text": "ok so we looking for working design when we come back"
+ },
+ {
+  "speaker": 3,
+  "start": 710.08,
+  "end": 710.24,
+  "text": "yeah"
+ },
+ {
+  "speaker": 3,
+  "start": 712.0,
+  "end": 715.6,
+  "text": "working design yeah it is it is mainly technical functional design"
+ },
+ {
+  "speaker": 0,
+  "start": 714.08,
+  "end": 714.32,
+  "text": "and then"
+ },
+ {
+  "speaker": 0,
+  "start": 715.6800000000001,
+  "end": 723.2,
+  "text": "and then the technical funct you are the technical function so so you are the working design so you have a working design and then a functional design"
+ },
+ {
+  "speaker": 3,
+  "start": 717.2,
+  "end": 718.5600000000001,
+  "text": "yeah functional design ok"
+ },
+ {
+  "speaker": 2,
+  "start": 720.48,
+  "end": 720.5600000000001,
+  "text": "ok"
+ },
+ {
+  "speaker": 0,
+  "start": 724.4,
+  "end": 737.12,
+  "text": "and the marketing manager is coming up with some user requirement specification like friendliness and what we just discussed in general that would be your idea and of course price"
+ },
+ {
+  "speaker": 0,
+  "start": 738.16,
+  "end": 744.16,
+  "text": "that it that it that the price is a good price i mean the price is given but that with"
+ },
+ {
+  "speaker": 1,
+  "start": 745.12,
+  "end": 749.6,
+  "text": "we have to justify that price by having sufficient features to make it sell at that price"
+ },
+ {
+  "speaker": 0,
+  "start": 746.4,
+  "end": 746.72,
+  "text": "that is right"
+ },
+ {
+  "speaker": 0,
+  "start": 749.52,
+  "end": 749.84,
+  "text": "that is right"
+ },
+ {
+  "speaker": 0,
+  "start": 751.28,
+  "end": 757.84,
+  "text": "and you know bes you you will get specific instructions for that i think that is the end of the show yeah"
+ },
+ {
+  "speaker": 0,
+  "start": 764.72,
+  "end": 764.8000000000001,
+  "text": "so"
+ },
+ {
+  "speaker": 0,
+  "start": 767.28,
+  "end": 773.76,
+  "text": "we have well we have a tr two two two three minutes any questions at this point or"
+ },
+ {
+  "speaker": 0,
+  "start": 774.88,
+  "end": 775.52,
+  "text": "suggestions"
+ },
+ {
+  "speaker": 2,
+  "start": 777.2,
+  "end": 777.28,
+  "text": "no"
+ },
+ {
+  "speaker": 0,
+  "start": 777.6800000000001,
+  "end": 784.16,
+  "text": "i think basically basically you will get instructions to work with and if you have any questions"
+ },
+ {
+  "speaker": 2,
+  "start": 782.72,
+  "end": 782.8000000000001,
+  "text": "ok"
+ },
+ {
+  "speaker": 0,
+  "start": 785.9200000000001,
+  "end": 786.64,
+  "text": "i guess you can"
+ },
+ {
+  "speaker": 1,
+  "start": 787.52,
+  "end": 792.24,
+  "text": "kay i think i have enough to think about till our next meeting how about you people"
+ },
+ {
+  "speaker": 0,
+  "start": 790.88,
+  "end": 790.96,
+  "text": "ok"
+ },
+ {
+  "speaker": 3,
+  "start": 791.04,
+  "end": 793.9200000000001,
+  "text": "yeah you may have yeah you may have i think yeah"
+ },
+ {
+  "speaker": 1,
+  "start": 794.4,
+  "end": 794.5600000000001,
+  "text": "kay"
+ },
+ {
+  "speaker": 0,
+  "start": 795.52,
+  "end": 795.6,
+  "text": "ok"
+ },
+ {
+  "speaker": 1,
+  "start": 796.32,
+  "end": 796.72,
+  "text": "rightright well"
+ },
+ {
+  "speaker": 0,
+  "start": 796.64,
+  "end": 796.72,
+  "text": "well"
+ },
+ {
+  "speaker": 2,
+  "start": 797.28,
+  "end": 797.6800000000001,
+  "text": "let us see"
+ },
+ {
+  "speaker": 0,
+  "start": 798.08,
+  "end": 803.36,
+  "text": "then we see you in about thirty minutes and see what we can come up with"
+ },
+ {
+  "speaker": 2,
+  "start": 801.84,
+  "end": 801.9200000000001,
+  "text": "y"
+ },
+ {
+  "speaker": 1,
+  "start": 803.76,
+  "end": 804.48,
+  "text": "ok very good"
+ },
+ {
+  "speaker": 2,
+  "start": 804.0,
+  "end": 805.44,
+  "text": "ok can yes"
+ },
+ {
+  "speaker": 0,
+  "start": 804.72,
+  "end": 804.8000000000001,
+  "text": "ok"
+ },
+ {
+  "speaker": 3,
+  "start": 805.44,
+  "end": 805.6,
+  "text": "yeah"
+ },
+ {
+  "speaker": 0,
+  "start": 806.8000000000001,
+  "end": 807.44,
+  "text": "oks"
+ },
+ {
+  "speaker": 0,
+  "start": 814.4,
+  "end": 815.6,
+  "text": "so now we have to walk out"
+ },
+ {
+  "speaker": 3,
+  "start": 816.24,
+  "end": 816.4,
+  "text": "yeah"
+ },
+ {
+  "speaker": 2,
+  "start": 819.6800000000001,
+  "end": 820.48,
+  "text": "can we take this"
+ },
+ {
+  "speaker": 3,
+  "start": 820.96,
+  "end": 823.12,
+  "text": "i think we have to keep it here let us"
+ }
+]

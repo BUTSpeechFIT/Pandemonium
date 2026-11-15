@@ -1,0 +1,419 @@
+# DiCoP-CTC - Diarization-Conditioned Parakeet target-speaker ASR with a CTC head.
+#
+# Same FDDT-conditioned encoder as conf/dicop.yaml, with the transducer's joint reused as a
+# frame-wise CTC head and its prediction network dropped. For long-form training: the TDT loss
+# cannot score a session-length transcript at all (its numba kernels launch one thread per
+# target token, and a CUDA block caps at 1024). CTC log-probs are (B, T, V).
+#
+# Warm-started from Parakeet-TDT-0.6b-v3 (8192 sub-words, 8193 CTC classes with the blank).
+# Because the head *is* the pretrained joint, only the FDDT blocks start from scratch.
+
+name: dicop_ctc
+seed: 1234
+
+# Evaluate before the first training step. Useful to confirm a warm start, slow otherwise.
+evaluate_at_start: false
+
+# Supplies the tokenizer and the initial encoder weights. Its prediction and joint networks
+# have nothing to load into here, and the CTC head and FDDT blocks have no counterpart there;
+# both sides of that mismatch are expected and are reported at startup.
+init_from_pretrained: nvidia/parakeet-tdt-0.6b-v3
+
+# Which head `train.py` builds: `ctc` -> EncDecCTCBPEModelSTNO, `tdt` -> EncDecRNNTBPEModelSTNO.
+head: ctc
+# init_from_ptl_ckpt: ???  # Resume weights (only) from a DiCoP-CTC Lightning checkpoint.
+model:
+  sample_rate: 16000
+  # Long sessions exhaust memory in the transducer loss; cpWER is what the model is selected on.
+  # Cheap here, unlike the transducer's: the CTC lattice is (B, T, U), not (B, T, U, V).
+  compute_eval_loss: true
+  log_prediction: true
+  skip_nan_grad: false
+
+  # Learning-rate multiplier for the FDDT parameters. 1.0 reproduces the released checkpoints:
+  # the original NeMo code built this parameter group but discarded it on the code path every
+  # config took, so the multiplier was silently a no-op. Values above 1 are the
+  # intended-but-untested behaviour, and switching away from 1.0 emits two parameter groups,
+  # which optimizer state saved by a 1.0 run cannot be resumed into.
+  fddt_lr_multiplier: 1.0
+
+  # Learning rates for the sinks, relative to `optim.lr`. The gate needs the extreme value:
+  # AdamW moves ~lr per step and it has several logits to cross. The projections start as exact
+  # copies of the local q/k/v and only need to specialize, so they run *below* the base rate --
+  # at 0.5 base, 0.4 puts them at 0.2, which is where the runs that produced the best scores
+  # had them.
+  sink_gate_lr_multiplier: 300.0
+  sink_lr_multiplier: 0.4
+
+  # Learning rate for the CTC head, relative to `optim.lr`; only consulted when it is unfrozen.
+  # Measured effect is small, but the head is what the transducer stack borrows back.
+  head_lr_multiplier: 1.0
+
+  # Anneal the sink gate from `encoder.sink_gate_init` to 0 over this many steps, instead of
+  # learning it. A learnable gate settles shut -- the sinks are only useful once read and only
+  # get gradient once read -- so this forces them open on a schedule. Freezes the gate when set;
+  # 0 leaves it learnable.
+  sink_gate_warmup_steps: 0
+
+  # Auxiliary objective: predict the session's speaker count from the sink tokens. Gives them
+  # something to pool that a 256-frame window cannot supply. 0 disables it.
+  speaker_count_loss_weight: 0.0
+  max_speakers: 8
+
+  # Text normalization applied to references before tokenization and to both sides at scoring.
+  text_norm: whisper_nsf
+
+  # Token WER on training batches costs a full greedy decode every logged step.
+  log_training_wer: false
+
+  # Fallback for evaluation sets whose sessions are too long for full-context attention.
+  local_attn_oom_fallback: false
+  local_attn_eval_context: [256, 256]
+
+  # Park the optimizer in host memory while evaluating.
+  offload_optimizer_on_eval: true
+
+  meeteval:
+    tcp_collar: 5
+    # One STM line per word. Gives tcpWER the tightest timings and matches what infer.py writes.
+    output_per_word_timestamps: true
+
+  model_defaults:
+    enc_hidden: ${model.encoder.d_model}
+    # The pretrained joint's widths. These are not free parameters: they have to match
+    # Parakeet-TDT-0.6b-v3's joint or its tensors will not load into the CTC head.
+    pred_hidden: 640
+    joint_hidden: 640
+    tdt_durations: [0, 1, 2, 3, 4]
+    num_tdt_durations: 5
+  train_ds:
+    # Either a NeMo JSON Lines manifest (*.jsonl) or a Lhotse CutSet (*.jsonl.gz). The format is
+    # inferred from the suffix; set `use_lhotse` explicitly to override (e.g. for a gzipped NeMo
+    # manifest). Note the two differ in one respect: a Lhotse epoch enumerates every
+    # (cut, speaker) pair, while a NeMo epoch samples one random target speaker per session.
+    manifest_filepath: ???
+    # use_lhotse: true
+    sample_rate: ${model.sample_rate}
+    batch_size: 16
+    shuffle: true
+    num_workers: 4
+    prefetch_factor: 2
+    pin_memory: true
+    max_duration: 10000
+    min_duration: 0.1
+
+    # Duration-based batching. `batch_size` above is ignored when this is set: batches are filled
+    # until `len(batch) * longest_item` reaches this many seconds, which is what actually decides
+    # memory, since every item is padded to the longest. Essential once corpora of very different
+    # lengths are mixed -- LibriMix is ~10 s where AMI windows are 600 s, so a fixed count sized
+    # for AMI wastes the card on LibriMix. Null falls back to fixed `batch_size`.
+    #
+    # 1200 s is calibrated from the AMI+NOTSOFAR run, whose batch of 2 x 600 s peaked at 79 GiB
+    # of 96 -- ~10 GiB weights and optimizer, ~0.06 GiB per padded second. It keeps AMI at 2 items
+    # per batch while letting LibriMix pack up to `max_batch_size`.
+    # Requires `trainer.use_distributed_sampler: false`; see src/data/dynamic_batching.py.
+    max_batch_duration: 1200
+    max_batch_size: 64
+    num_buckets: 10
+
+    # Sampling weight per manifest, in `manifest_filepath` order, or null for none. An epoch
+    # draws `epoch_items` items in proportion to these instead of enumerating each item once, so
+    # a small corpus repeats and a large one is only partly visited. Needed because item counts
+    # are a poor prior: LibriMix is 78% of the items but 18% of the audio, being 30 s windows.
+    # [1, 10, 10] over l2mix, notsofar-full, ami-600s gives 26/18/56 instead of 78/5/16.
+    #
+    # Note the epoch gets longer in *steps* even at a fixed item count, because the upweighted
+    # corpora are the long ones and fewer of them fit in a batch. `epoch_items` (null = one draw
+    # per item) shortens it again if the validation cadence matters more.
+    corpus_weights: null
+    epoch_items: null
+    # 'average' mixes multi-channel recordings down to mono, as used for AMI-SDM.
+    channel_selector: average
+
+    # Corrupt the diarization mask during training, so FDDT sees something closer to a
+    # diarizer's output than to reference segmentation. Lhotse only, training only; both
+    # probabilities at 0 disable it. Lengths are encoder frames at 12.5 Hz.
+    stno_augment:
+      segment_prob: 0.5     # chance an item gets any span relabelled at all
+      change_prob: 0.2      # chance each span within such an item is the one relabelled
+      min_seg_len: 5
+      max_seg_len: 20
+      gaussian_prob: 0.5
+      gaussian_var: 0.05
+
+  validation_ds:
+    # NeMo manifest or Lhotse CutSet; see train_ds above. Unlike train_ds, every manifest here is
+    # a dataset of its own: it is decoded and scored separately and logged under
+    # `val/<name>/cp_wer`, alongside a `val/cp_wer` pooled over all of them, which is what
+    # `exp_manager` selects checkpoints on. A single path or a comma-separated list names its
+    # datasets after the manifest file stems; a mapping names them itself, and is the only way to
+    # score several manifests as one set:
+    #   manifest_filepath="{ami:'/a/dev.jsonl.gz',notsofar:'/b/dev1.jsonl.gz,/b/dev2.jsonl.gz'}"
+    manifest_filepath: ???
+    # use_lhotse: true
+    sample_rate: ${model.sample_rate}
+    # Full sessions are decoded in one pass, so one at a time.
+    batch_size: 1
+    shuffle: false
+    use_start_end_token: false
+    num_workers: 2
+    prefetch_factor: 2
+    pin_memory: false
+    channel_selector: average
+
+  test_ds:
+    # NeMo manifest or Lhotse CutSet; scored per dataset under `test/<name>/`, see validation_ds.
+    manifest_filepath: null
+    # use_lhotse: true
+    sample_rate: ${model.sample_rate}
+    batch_size: 1
+    shuffle: false
+    use_start_end_token: false
+    num_workers: 8
+    pin_memory: true
+    channel_selector: average
+
+  # Left empty on purpose: the tokenizer is taken from `init_from_pretrained`. Set `dir` only
+  # if you are training without a pretrained Parakeet.
+  tokenizer:
+    dir: ""
+    type: bpe
+
+  preprocessor:
+    _target_: nemo.collections.asr.modules.AudioToMelSpectrogramPreprocessor
+    sample_rate: ${model.sample_rate}
+    normalize: "per_feature"
+    window_size: 0.025
+    window_stride: 0.01
+    window: "hann"
+    features: 128
+    n_fft: 512
+    frame_splicing: 1
+    dither: 0.00001
+    pad_to: 0
+
+  # Retuned for long-form: many short masks rather than a few enormous ones. `time_width` is a
+  # proportion of the utterance, so the shipped 10 x 0.05 masked half of a 6-minute session.
+  # 50 x 0.002 holds ~10% masked at any chunk length.
+  spec_augment:
+    _target_: nemo.collections.asr.modules.SpectrogramAugmentation
+    freq_masks: 2
+    time_masks: 50
+    freq_width: 27
+    time_width: 0.002
+  encoder:
+    _target_: src.model.modules.stno_encoder.ConformerEncoderSTNO
+    feat_in: ${model.preprocessor.features}
+    feat_out: -1
+    n_layers: 24
+    d_model: 1024
+    use_bias: false
+
+    # Sub-sampling parameters
+    subsampling: dw_striding
+    subsampling_factor: 8   # 8 * 10 ms = 80 ms per encoder frame, i.e. 12.5 Hz
+    subsampling_conv_channels: 256
+    causal_downsampling: false
+
+    # Reduction changes the frame rate mid-stack, which would misalign the STNO mask;
+    # ConformerEncoderSTNO refuses to run with both.
+    reduction: null
+    reduction_position: null
+    reduction_factor: 1
+
+    # Feed forward module's params
+    ff_expansion_factor: 4
+
+    # Multi-headed Attention Module's params.
+    #
+    # Sliding window, and unlike conf/dicop.yaml this is the trained topology rather than an
+    # eval-time fallback: memory grows linearly in session length. 256 frames is ~20 s each way.
+    self_attention_model: rel_pos_local_attn
+    n_heads: 8
+    att_context_size: [256, 256]
+    att_context_style: regular
+    xscaling: false
+    untie_biases: true
+    pos_emb_max_len: 45000       # 1 hour at 12.5 Hz
+
+    # Attention sinks: frames everything else additionally attends to, and which attend
+    # everywhere themselves. Off by default, which is the regime the encoder was pretrained in.
+    global_tokens: 4
+    global_tokens_spacing: 1
+
+    # Prepend `global_tokens` learnable vectors and let those be the sinks, instead of promoting
+    # whichever frames sit at the front of the input. Stripped after the layer stack. Requires
+    # `global_tokens_spacing: 1`.
+    learnable_sink_tokens: true
+    # `false` reuses the local q/k/v. `true` gives the sinks their own, which NeMo would build
+    # at random -- `init_global_attn_from_local` copies the local ones in instead.
+    global_attn_separate: true
+    init_global_attn_from_local: true
+
+    # Learnable bias on the sink logits, added before the softmax, so sinks can be introduced
+    # without moving a pretrained encoder. `null` is NeMo's ungated behaviour, which cost 0.83
+    # cpWER at epoch 0 against 0.59 gated.
+    sink_gate_init: -8.0
+
+    # Off, and not optional: NeMo's sliding-window attention has no scaled-dot-product path and
+    # raises rather than ignoring the flag. Nothing is lost -- SDPA exists to avoid
+    # materializing the (B, H, T, T) scores, which a windowed implementation never builds.
+    use_pytorch_sdpa: false
+
+    # Convolution module's params
+    conv_kernel_size: 9
+    conv_norm_type: 'batch_norm'
+    conv_context_size: null
+
+    ### regularization
+    dropout: 0.1
+    dropout_pre_encoder: 0.1
+    dropout_emb: 0.0
+    dropout_att: 0.1
+
+    stochastic_depth_drop_prob: 0.0
+    stochastic_depth_mode: linear
+    stochastic_depth_start_layer: 1
+
+    # Recompute each layer in the backward pass instead of storing its activations. Roughly one
+    # extra forward per step, in exchange for the 24 layers' worth of activations -- the reason
+    # to turn it on is training on whole sessions rather than 30 s windows, where those
+    # activations are what does not fit. Training only; validation is unaffected.
+    activation_checkpointing: false
+
+    ### FDDT conditioning. Defaults match the values hardcoded in the original implementation.
+    # Silence and non-target frames start attenuated to this scale; target and overlap frames
+    # start at identity, so an unfinetuned model already suppresses interfering speech.
+    fddt_non_target_rate: 0.5
+    fddt_is_diagonal: true      # element-wise transforms rather than d_model x d_model matrices
+    fddt_bias_only: false
+    fddt_use_silence: true
+    fddt_use_target: true
+    fddt_use_non_target: true
+    fddt_use_overlap: true
+
+  # The pretrained joint with its prediction-network input held at zero; see
+  # src/model/modules/joint_ctc_decoder.py. `num_classes`/`vocabulary` are filled in from the
+  # tokenizer. `dropout` and `num_extra_outputs` reproduce the joint's shape and layer order --
+  # not tuning knobs: dropping the dropout moves the final Linear and breaks the key match.
+  decoder:
+    _target_: src.model.modules.joint_ctc_decoder.JointCTCDecoder
+    feat_in: ${model.model_defaults.enc_hidden}
+    num_classes: -1
+    vocabulary: null
+    pred_hidden: ${model.model_defaults.pred_hidden}
+    joint_hidden: ${model.model_defaults.joint_hidden}
+    activation: relu
+    dropout: 0.2
+    num_extra_outputs: ${model.model_defaults.num_tdt_durations}
+
+  # `mean_batch` matches NeMo's default: sum over each utterance, mean over the batch. With one
+  # long session per item the alternative (`mean`, per-token) would weight a talkative speaker's
+  # session the same as a quiet one's.
+  ctc_reduction: mean_batch
+
+  decoding:
+    strategy: "greedy_batch"
+
+    # Required: word timestamps are what place hypotheses on the time axis for tcpWER and for
+    # the STM output. Alignments are not needed and are expensive on long-form audio.
+    compute_timestamps: true
+    preserve_alignments: false
+
+  # Hold the head at its pretrained values and train only the encoder and its FDDT blocks. See
+  # `EncDecCTCModelSTNO.maybe_freeze_decoder` for what this buys and what it does not.
+  freeze_decoder: true
+
+  # Also decode validation with the reassembled transducer, reporting `val/tdt_cp_wer` beside
+  # `val/cp_wer`. Costs a second, autoregressive decode per epoch; selection stays on CTC.
+  eval_tdt: true
+  # Score with it, too. Turning this off keeps the stack (and so checkpoint compatibility) but
+  # skips the decode, which is unbounded on long sessions at `decoding.greedy.max_symbols`.
+  eval_tdt_metric: false
+  tdt_eval:
+    prediction:
+      _target_: nemo.collections.asr.modules.RNNTDecoder
+      normalization_mode: null
+      random_state_sampling: false
+      blank_as_pad: true
+      prednet:
+        pred_hidden: ${model.model_defaults.pred_hidden}
+        pred_rnn_layers: 2
+        t_max: null
+        dropout: 0.2
+    joint:
+      # Its `enc`/`pred`/`joint_net` are replaced with the head's own modules after
+      # construction, so nothing here is trained and no weights are duplicated.
+      _target_: nemo.collections.asr.modules.RNNTJoint
+      log_softmax: null
+      preserve_memory: false
+      fuse_loss_wer: false
+      jointnet:
+        joint_hidden: ${model.model_defaults.joint_hidden}
+        activation: "relu"
+        dropout: 0.2
+      num_extra_outputs: ${model.model_defaults.num_tdt_durations}
+    decoding:
+      strategy: "greedy_batch"
+      model_type: "tdt"
+      durations: ${model.model_defaults.tdt_durations}
+      compute_timestamps: true
+      preserve_alignments: false
+      greedy:
+        max_symbols: 10
+
+  optim:
+    name: adamw
+    lr: 0.5
+    betas: [0.9, 0.98]
+    weight_decay: 1e-3
+
+    sched:
+      name: NoamAnnealing
+      d_model: ${model.encoder.d_model}
+      warmup_steps: 2000
+      warmup_ratio: null
+      min_lr: 1e-6
+
+trainer:
+  devices: -1
+  num_nodes: 1
+  # Lightning cannot wrap a custom batch sampler, so `train_ds.max_batch_duration` needs this
+  # off; the dataloaders then shard themselves (see src/data/dataloader.py). Harmless when
+  # dynamic batching is unused -- the same sharding just happens one level down.
+  use_distributed_sampler: false
+  max_epochs: 500
+  max_steps: -1
+  val_check_interval: 1.0
+  accelerator: auto
+  strategy: ddp
+  accumulate_grad_batches: 1
+  gradient_clip_val: 1.0
+  precision: bf16
+  log_every_n_steps: 10
+  enable_progress_bar: True
+  num_sanity_val_steps: 0
+  check_val_every_n_epoch: 1
+  sync_batchnorm: true
+  enable_checkpointing: False  # Provided by exp_manager
+  logger: false                # Provided by exp_manager
+  benchmark: false             # must be false for variable-length speech input
+
+exp_manager:
+  exp_dir: ???
+  name: ${name}
+  create_tensorboard_logger: true
+  create_checkpoint_callback: true
+  checkpoint_callback_params:
+    monitor: "val/cp_wer"
+    mode: "min"
+    save_top_k: 5
+    always_save_nemo: True
+  resume_from_checkpoint: null
+  resume_if_exists: false
+  resume_ignore_no_checkpoint: false
+
+  create_wandb_logger: false
+  wandb_logger_kwargs:
+    name: ${name}
+    project: dicop

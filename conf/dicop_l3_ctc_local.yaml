@@ -1,0 +1,19 @@
+# Ladder rung 3: + CTC objective.
+#
+# Swaps the transducer head for CTC over Parakeet's own joint with the prediction-network input
+# pinned to zero (`src/model/modules/joint_ctc_decoder.py`), which is why this is a head swap and
+# not a retrained output layer.
+#
+# The reason it is on the ladder at all is that the TDT numba kernel cannot decode more than 1024
+# output tokens, and a training chunk longer than ~120 s exceeds that on these corpora. So the
+# later rungs are unreachable without it, and this row isolates what the objective costs at a
+# chunk length where TDT still works.
+#
+# Inherits from `dicop_ctc`, which is that head plus the local-attention encoder rung 2 arrived
+# at, so the two branches of the ladder meet here.
+defaults:
+  - dicop_ctc
+  - dicop_ladder_data
+  - _self_
+
+name: dicop_l3_ctc_local

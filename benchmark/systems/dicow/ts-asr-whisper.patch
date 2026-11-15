@@ -1,0 +1,218 @@
+diff --git a/src/data/local_datasets.py b/src/data/local_datasets.py
+index 16f5fb8..1d57a38 100644
+--- a/src/data/local_datasets.py
++++ b/src/data/local_datasets.py
+@@ -56,6 +56,7 @@ class TS_ASR_DatasetSuperclass:
+                  dataset_weights=None,
+                  feature_extractor=None,
+                  global_lang_id=None,
++                 keep_silent_speakers=False,
+                  load_channel_zero_only=False,
+                  load_signal_sum=False,
+                  musan_augment_prob=0.0,
+@@ -125,6 +126,7 @@ class TS_ASR_DatasetSuperclass:
+         self.feature_extractor = feature_extractor
+         self.model_features_subsample_factor = model_features_subsample_factor
+         self.global_lang_id = global_lang_id
++        self.keep_silent_speakers = keep_silent_speakers
+         self.assume_single_speaker_per_cut = assume_single_speaker_per_cut
+         self.prepare_cuts()
+         self.load_channel_zero_only = load_channel_zero_only
+@@ -150,6 +152,32 @@ class TS_ASR_DatasetSuperclass:
+             spks.add(suppervision.speaker)
+         return sorted(spks)
+ 
++    def get_cut_target_spks(self, cut):
++        """Speakers eligible as a decode/training target: those with at least one supervision whose
++        text is non-empty after normalization. `drop_empty_normalized_supervisions` removes empty-
++        normalized supervisions before the STNO masks are built, so a speaker that normalizes away
++        entirely is absent from the masks and must not be picked as a target (would KeyError in
++        get_stno_mask). Callers fall back to all speakers only when every speaker normalizes away."""
++        if self.keep_silent_speakers:
++            return self.get_cut_spks(cut)
++        spks = set()
++        for sup in cut.supervisions:
++            if self.text_norm(sup.text).strip():
++                spks.add(sup.speaker)
++        return sorted(spks)
++
++    def drop_empty_normalized_supervisions(self, cut: Cut):
++        """Drop supervisions whose text becomes empty/whitespace after normalization.
++
++        These segments (SBC-style fillers "um"/"mhm"/"<LAUGH>"/"<UNK>", etc.) carry no target
++        transcript but would still contribute speaker activity to the STNO diarization mask the
++        model conditions on -- causing a mismatch between the mask and the transcription, and
++        scoring empty reference speakers. Removing them here keeps the mask, the conditioning and
++        the scored reference consistent. No-op when keep_silent_speakers is set."""
++        if self.keep_silent_speakers:
++            return cut
++        return cut.filter_supervisions(lambda sup: bool(self.text_norm(sup.text).strip()))
++
+     def get_segment_text_with_timestamps(self, segment, use_timestamps, text_norm, skip_end_token):
+         start = f"<|{round_nearest(segment.start, 0.02):.2f}|>"
+         end = f"<|{round_nearest(segment.end_, 0.02):.2f}|>"
+@@ -228,7 +256,14 @@ class TS_ASR_DatasetSuperclass:
+         """Frame-level per-speaker activity, the speaker-independent half of `get_stno_mask`."""
+         speakers = list(sorted(CutSet.from_cuts([cut]).speakers))
+         speakers_to_idx = {spk: idx for idx, spk in enumerate(speakers)}
+-        spk_mask = cut.speakers_audio_mask(speaker_to_idx_map=speakers_to_idx)
++        spk_mask = np.asarray(cut.speakers_audio_mask(speaker_to_idx_map=speakers_to_idx))
++
++        if spk_mask.shape[0] == 0:
++            # Every supervision was dropped by normalization -> no speaker rows, which would break
++            # the reshape below (size-0 array). Synthesize a single silent (all-zero) speaker row so
++            # the masks stay well-formed; the target (if any) resolves to this silent row below.
++            spk_mask = np.zeros((1, spk_mask.shape[1]), dtype=spk_mask.dtype)
++            speakers_to_idx = {}
+ 
+         # Pad to match features
+         pad_len = (self.feature_extractor.n_samples - spk_mask.shape[-1]) % self.feature_extractor.n_samples
+@@ -247,6 +282,13 @@ class TS_ASR_DatasetSuperclass:
+         if speaker_id == "-1":
+             speaker_index = -1
+             spk_mask = np.pad(spk_mask, ((0, 1), (0, 0)), mode='constant')
++        elif speaker_id not in speakers_to_idx:
++            # Target normalized away entirely (all its supervisions had empty normalized text and
++            # were dropped) -> append a silent (all-zero) row so the sample is a silent target with
++            # empty transcription instead of crashing. Only when the speaker normalized away (see
++            # get_cut_target_spks); the model is then conditioned on all-silence and emits nothing.
++            speaker_index = spk_mask.shape[0]
++            spk_mask = np.pad(spk_mask, ((0, 1), (0, 0)), mode='constant')
+         else:
+             speaker_index = speakers_to_idx[speaker_id]
+ 
+@@ -349,9 +391,12 @@ class TS_ASR_DatasetSuperclass:
+             spk_activity = self.downsample_mean(spk_activity, int(cut.sampling_rate / 10))
+             best_fit_window_start, _ = self.sample_enrollment_window(spk_activity, window_size=30 * 10,
+                                                                      greedy_sample=greedy_sample)
+-        new_cut = fastcopy(cut)
++        # Unique id: the per-cut feature/mask cache (_cached_per_cut) keys on cut.id, so a plain
++        # fastcopy (same id as the full recording) would hand this 30s enrollment window the full
++        # recording's cached features. Key it per (recording, speaker) instead.
++        new_cut = fastcopy(cut, id=f"{cut.id}::enr::{spk_id}")
+         new_cut.start = best_fit_window_start / 10
+-        new_cut.duration = 30
++        new_cut.duration = min(30, cut.duration - new_cut.start)  # recordings shorter than 30 s (LibriMix)
+         supervisions_pruned = []
+         for supervision in cut.supervisions:
+             if supervision.end < new_cut.start:
+@@ -544,6 +589,10 @@ class TS_ASR_DatasetSuperclass:
+         return " ".join(texts)
+ 
+     def cut_to_sample(self, cut: Cut, speaker_id: str, is_nested: bool = False):
++        # Drop supervisions whose text normalizes to empty so they don't enter the STNO diarization
++        # mask the model conditions on (keeps mask/transcription/reference consistent). No-op under
++        # keep_silent_speakers.
++        cut = self.drop_empty_normalized_supervisions(cut)
+         stno_mask = self.get_stno_mask(cut, speaker_id)
+         features, att_mask = self.get_features(cut)
+ 
+@@ -596,7 +645,9 @@ class TS_ASR_Dataset(TS_ASR_DatasetSuperclass, Dataset):
+ 
+         cut_index = np.searchsorted(self.to_index_mapping, idx, side='right')
+         cut = self.cset[cut_index]
+-        spks = self.get_cut_spks(cut)
++        # Only target speakers whose text survives normalization (see get_cut_target_spks); fall
++        # back to raw speakers if every one normalizes away (get_stno_mask makes it a silent target).
++        spks = self.get_cut_target_spks(cut) or self.get_cut_spks(cut)
+         local_sid = (idx - self.to_index_mapping[cut_index]) % len(spks)
+         sid = spks[local_sid]
+         return self.cut_to_sample(cut, sid)
+@@ -653,9 +704,13 @@ class LhotseLongFormDataset(TS_ASR_Dataset):
+         Returns:
+             CutSet: The reference CutSet containing ground truth transcripts and speaker labels
+         """
+-        if self._references is not None:
+-            return self._references
+-        return self.cset
++        refs = self._references if self._references is not None else self.cset
++        # Keep the scoring reference consistent with the decode conditioning: unless silent-speaker
++        # handling is disabled, drop supervisions whose text normalizes to empty so they don't appear
++        # in ref.json (empty-normalized segments would otherwise score as spurious reference content).
++        if not self.keep_silent_speakers:
++            refs = refs.map(self.drop_empty_normalized_supervisions)
++        return refs
+ 
+     def has_reference_lang(self, rec_id):
+         cut = self.references.filter(lambda x: get_cut_recording_id(x) == rec_id)[0]
+@@ -665,6 +720,10 @@ class LhotseLongFormDataset(TS_ASR_Dataset):
+             return False
+ 
+     def cut_to_sample(self, cut: Cut, speaker_id, is_nested=False):
++        # Mirror the training path: drop supervisions whose text normalizes to empty so they don't
++        # enter the STNO diarization mask the model conditions on (this changes the decode), matching
++        # how the reference is built below. No-op under keep_silent_speakers.
++        cut = self.drop_empty_normalized_supervisions(cut)
+         stno_mask = self.get_stno_mask(cut, speaker_id)
+         features, att_mask = self.get_features(cut)
+ 
+@@ -779,6 +838,7 @@ def build_datasets(cutset_paths: List[Union[str, Path]], data_args: DataArgument
+                                                                             feature_extractor=container.feature_extractor,
+                                                                             global_lang_id=data_args.global_lang_id,
+                                                                             provide_gt_lang=data_args.provide_gt_lang,
++                                                                            keep_silent_speakers=data_args.keep_silent_speakers,
+                                                                             load_channel_zero_only=data_args.load_channel_zero_only,
+                                                                             break_to_characters="break_to_chars" in path,
+                                                                             use_enrollments=data_args.use_enrollments,
+diff --git a/src/train.py b/src/train.py
+index cb6a046..18a8fcd 100755
+--- a/src/train.py
++++ b/src/train.py
+@@ -76,6 +76,7 @@ class ModelTrainer:
+             text_norm=get_text_norm(self.data_args.train_text_norm),
+             feature_extractor=self.container.feature_extractor,
+             global_lang_id=self.data_args.global_lang_id,
++            keep_silent_speakers=self.data_args.keep_silent_speakers,
+             load_channel_zero_only=self.data_args.load_channel_zero_only,
+             use_enrollments=self.data_args.use_enrollments,
+             enrollment_cutset=enrollment_cutset,
+diff --git a/src/utils/evaluation.py b/src/utils/evaluation.py
+index b74d0b2..a9ea2d2 100644
+--- a/src/utils/evaluation.py
++++ b/src/utils/evaluation.py
+@@ -232,6 +232,9 @@ def calculate_tcp_wer(processed_sessions, current_dir, metrics_list,
+             collar=collar,
+             save_visualizations=save_visualizations,
+             metrics_list=metrics_list)
++        if session_wer is None:
++            # Session skipped (empty reference after normalization) -- see calc_wer.
++            continue
+         wer_dfs.append(session_wer)
+     return wer_dfs
+ 
+diff --git a/src/utils/training_args.py b/src/utils/training_args.py
+index c3a4689..8bdc94f 100755
+--- a/src/utils/training_args.py
++++ b/src/utils/training_args.py
+@@ -142,6 +142,12 @@ class DataArguments:
+     eval_text_norm: Optional[str] = field(default=None, metadata={
+         "help": "Normalisation to use for evaluation."})
+ 
++    keep_silent_speakers: Optional[bool] = field(default=False, metadata={
++        "help": "Disable silent-speaker handling: keep supervisions whose text normalizes to empty "
++                "and allow textless (silent) speakers as targets. Default False drops empty-normalized "
++                "supervisions before the STNO mask (so the model is conditioned/scored only on real "
++                "speech) and excludes speakers that normalize away entirely as decode targets."})
++
+     dataset_weights: Optional[List[int]] = field(default=None, metadata={"help": "Dataset weights."})
+ 
+     use_enrollments: Optional[bool] = field(default=False, metadata={"help": "Use enrollments."})
+diff --git a/src/utils/wer.py b/src/utils/wer.py
+index 471fa2d..5103285 100644
+--- a/src/utils/wer.py
++++ b/src/utils/wer.py
+@@ -143,6 +143,14 @@ def calc_wer(out_dir: Path,
+ 
+     ref_seglst = to_seglst(ref_file)
+ 
++    if len(ref_seglst) == 0:
++        # Whole session's reference normalized away (e.g. a 30s window whose only supervisions were
++        # fillers dropped by drop_empty_normalized_supervisions). There is nothing to score against
++        # -- 0 reference words -- so skip it; the caller drops the None. Aggregation sums errors and
++        # lengths across sessions, so an all-empty window contributes nothing anyway.
++        _LOG.warning(f"Empty reference for {ref_file}, skipping session from scoring.")
++        return None
++
+     if len(tcp_hyp_seglst) == 0:
+         tcp_hyp_seglst = create_dummy_seg_list(ref_seglst.segments[0]['session_id'])
+         _LOG.warning(f"Empty tcp_wer_hyp_json, using dummy segment: {tcp_hyp_seglst.segments[0]}")

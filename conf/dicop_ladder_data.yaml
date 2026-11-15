@@ -1,0 +1,160 @@
+# Data recipe for the DiCoW-matched ablation ladder, shared by every rung.
+#
+# Included via each rung's `defaults:` list, so the six configs differ only in the thing being
+# ablated. Paths resolve `${oc.env:MANIFEST_DIR}`, matching the DiCoW config this recipe is
+# copied from -- export MANIFEST_DIR before launching.
+#
+# Two things to know before reading the weights:
+#
+#   * `corpus_weights` is a PER-CUT weight, so a corpus's share of the epoch is proportional to
+#     `weight x cut_count`, not to the weight alone. DiCoW's `dataset_weights` may normalize by
+#     dataset instead; if it does, these numbers reproduce the file but not the mixture, and the
+#     startup log line ("N% of the epoch: ...") is what to check against the DiCoW run.
+#   * Weights are only read when `max_batch_duration` is set -- see `get_stno_dataloader`. That
+#     is why the duration-based sampler is switched on here rather than left to the base config,
+#     and why `trainer.use_distributed_sampler` must be false alongside it.
+#
+# The 30 s cutsets below are the ladder's first three rungs. The 60 s / 2 min / 5 min /
+# 10 min rungs override `train_ds.manifest_filepath` and their accumulation only.
+
+# Everything below the data is here to keep the ladder a ONE-VARIABLE ladder. Rungs 1-2 build on
+# conf/dicop.yaml and rungs 3-7 on conf/dicop_ctc.yaml, and those two bases had drifted apart in
+# four ways that have nothing to do with the objective: a different pretrained checkpoint,
+# different SpecAugment, diarization-mask augmentation on one side only, and gated vs ungated
+# attention sinks. Left alone, the "+CTC objective" row would have measured all five changes at
+# once. Pinning them here makes that row the head swap it claims to be.
+
+# v3 for every rung. conf/dicop.yaml ships v2 and conf/dicop_ctc.yaml v3; the choice matters less
+# than that it is the same on both sides of the fork.
+init_from_pretrained: nvidia/parakeet-tdt-0.6b-v3
+
+model:
+  # conf/dicop_ctc.yaml's setting, the gentler of the two: 50 narrow masks cover ~10% of the
+  # frames against ~50% for conf/dicop.yaml's 10 x 0.05.
+  spec_augment:
+    _target_: nemo.collections.asr.modules.SpectrogramAugmentation
+    freq_masks: 2
+    time_masks: 50
+    freq_width: 27
+    time_width: 0.002
+
+  train_ds:
+    # Diarization-mask perturbation, on for every rung. It is what makes the model tolerate a
+    # real diarizer's errors rather than the oracle mask, so leaving it off for the two TDT rungs
+    # would have flattered them.
+    stno_augment:
+      change_prob: 0.2
+      gaussian_prob: 0.5
+      gaussian_var: 0.05
+      max_seg_len: 20
+      min_seg_len: 5
+      segment_prob: 0.5
+
+    manifest_filepath:
+      - ${oc.env:MANIFEST_DIR}/notsofar1/notsofar1_sdm_train_set_240825.1_train_cutset_30s.jsonl.gz
+      - ${oc.env:MANIFEST_DIR}/ami/ami-sdm_cutset_train_30s.jsonl.gz
+      - ${oc.env:MANIFEST_DIR}/librimix/librimix_cutset_libri2mix_train-clean-100_noisy_30s.jsonl.gz
+      - ${oc.env:MANIFEST_DIR}/librimix/librimix_cutset_libri2mix_train-clean-360_noisy_30s.jsonl.gz
+      - ${oc.env:MANIFEST_DIR}/librimix/librimix_cutset_libri3mix_train-clean-360_noisy_30s.jsonl.gz
+      - ${oc.env:MANIFEST_DIR}/librispeechmix/librispeechmix_custom_cutset_train-3mix.jsonl.gz
+
+    # DiCoW's `dataset_weights`, in the same order: the two meeting corpora at 6, the four
+    # synthetic-mixture corpora at 1.
+    corpus_weights: [6, 6, 1, 1, 1, 1]
+    epoch_items: null
+
+    # Duration-based batching, required for the weights above to be read at all.
+    #
+    # The budget is PER GPU and applies to the padded rectangle -- `n_items x longest_item`, not
+    # the sum -- so it needs no change as the chunk length grows: longer items simply mean fewer
+    # per batch. 1000 s sized for an 80 GB A100, from the measurement in conf/dicop_ctc.yaml:
+    # ~10 GiB weights and optimizer plus ~0.06 GiB per padded second, so 1000 s lands near 68 GiB
+    # and leaves headroom for the peak. (That figure was taken with the CTC head and local
+    # attention; the two TDT rungs have a different profile -- the joint's memory is governed by
+    # `fused_batch_size` -- and are worth watching on the first run.)
+    max_batch_duration: 1000
+    max_batch_size: 64
+    num_buckets: 10
+
+  validation_ds:
+    # DiCoW's `dev_cutsets`. Whole NOTSOFAR sessions, not windows, so this is the long-form
+    # number throughout the ladder and stays comparable across rungs that train on different
+    # chunk lengths.
+    manifest_filepath:
+      notsofar1-dev: ${oc.env:MANIFEST_DIR}/notsofar1/notsofar1_sdm_dev_set_240825.1_dev1_cutset.jsonl.gz
+
+  test_ds:
+    # The table's 20 columns: four corpora at five evaluation windows each, the windows matching
+    # the training-chunk ladder. Not touched during training -- this records the scoring protocol
+    # in one place and feeds scripts/run_inference.sh.
+    #
+    # Naming follows the existing cutsets: `_30s` / `_60s` / `_120s` / `_300s` for the windowed
+    # variants and the unsuffixed file for the full conversation. The windowed variants are built
+    # with `mt-asr-data-prep/src/pre_segment_using_alignments.py --max_len {30,60,120,300}`,
+    # WITHOUT `--stochastic`, which is oversampling and would score the same audio twice.
+    #
+    # NOTE. Mixer6 and SBC have no manifests under $MANIFEST_DIR yet and no entry in the DiCoW
+    # `eval_cutsets` list this recipe came from, so their paths below are a convention, not a
+    # file that exists. Fill them in (or drop the rows) before running inference.
+    manifest_filepath:
+      notsofar1-30s: ${oc.env:MANIFEST_DIR}/notsofar1/notsofar1_sdm_eval_set_240629.1_eval_small_with_GT_cutset_30s.jsonl.gz
+      notsofar1-60s: ${oc.env:MANIFEST_DIR}/notsofar1/notsofar1_sdm_eval_set_240629.1_eval_small_with_GT_cutset_60s.jsonl.gz
+      notsofar1-120s: ${oc.env:MANIFEST_DIR}/notsofar1/notsofar1_sdm_eval_set_240629.1_eval_small_with_GT_cutset_120s.jsonl.gz
+      notsofar1-300s: ${oc.env:MANIFEST_DIR}/notsofar1/notsofar1_sdm_eval_set_240629.1_eval_small_with_GT_cutset_300s.jsonl.gz
+      notsofar1-full: ${oc.env:MANIFEST_DIR}/notsofar1/notsofar1_sdm_eval_set_240629.1_eval_small_with_GT_cutset.jsonl.gz
+
+      ami-30s: ${oc.env:MANIFEST_DIR}/ami/ami-sdm_cutset_test_30s.jsonl.gz
+      ami-60s: ${oc.env:MANIFEST_DIR}/ami/ami-sdm_cutset_test_60s.jsonl.gz
+      ami-120s: ${oc.env:MANIFEST_DIR}/ami/ami-sdm_cutset_test_120s.jsonl.gz
+      ami-300s: ${oc.env:MANIFEST_DIR}/ami/ami-sdm_cutset_test_300s.jsonl.gz
+      ami-full: ${oc.env:MANIFEST_DIR}/ami/ami-sdm_cutset_test.jsonl.gz
+
+      mixer6-30s: ${oc.env:MANIFEST_DIR}/mixer6/mixer6_cutset_test_30s.jsonl.gz
+      mixer6-60s: ${oc.env:MANIFEST_DIR}/mixer6/mixer6_cutset_test_60s.jsonl.gz
+      mixer6-120s: ${oc.env:MANIFEST_DIR}/mixer6/mixer6_cutset_test_120s.jsonl.gz
+      mixer6-300s: ${oc.env:MANIFEST_DIR}/mixer6/mixer6_cutset_test_300s.jsonl.gz
+      mixer6-full: ${oc.env:MANIFEST_DIR}/mixer6/mixer6_cutset_test.jsonl.gz
+
+      sbc-30s: ${oc.env:MANIFEST_DIR}/sbc/sbc_cutset_test_30s.jsonl.gz
+      sbc-60s: ${oc.env:MANIFEST_DIR}/sbc/sbc_cutset_test_60s.jsonl.gz
+      sbc-120s: ${oc.env:MANIFEST_DIR}/sbc/sbc_cutset_test_120s.jsonl.gz
+      sbc-300s: ${oc.env:MANIFEST_DIR}/sbc/sbc_cutset_test_300s.jsonl.gz
+      sbc-full: ${oc.env:MANIFEST_DIR}/sbc/sbc_cutset_test.jsonl.gz
+
+  # tcpWER is what the table reports, so word timestamps have to be produced.
+  meeteval:
+    tcp_collar: 5
+    output_per_word_timestamps: true
+    # Whole conversations, scored as conversations: a target-speaker model conditioned on a
+    # diarization mask has a speaker label that means the same thing in every window, so the
+    # windows of a recording compose onto one timeline.
+    session_scope: recording
+
+trainer:
+  # Required by the duration-based batch sampler above; Lightning cannot wrap a custom batch
+  # sampler, so the evaluation loaders shard themselves. See src/data/dynamic_batching.py.
+  use_distributed_sampler: false
+
+  # Effective batch is `world_size x items_per_gpu x accumulate_grad_batches`, and
+  # `items_per_gpu` is `floor(max_batch_duration / item_length)`. ASSUMES 4 GPUs; halve the GPU
+  # count and these need doubling. At 1000 s the 30/60/120 s rungs are already at 132/64/32
+  # items per step, so only the 5 and 10 minute rungs accumulate -- they set their own.
+  #
+  # `scripts/run_train.sh --accum N` overrides this; without the flag the config value stands.
+  accumulate_grad_batches: 1
+
+exp_manager:
+  # Stop when the dev cpWER has not improved for 3 validations. `patience` counts validation
+  # runs, not epochs, so this is 3 epochs only while `check_val_every_n_epoch` is 1.
+  #
+  # `val/cp_wer` is the pooled number, which here is just the NOTSOFAR dev set -- the only
+  # `validation_ds` entry -- so the ladder is selected and stopped on the same long-form
+  # metric at every rung, whatever chunk length it trained on.
+  create_early_stopping_callback: true
+  early_stopping_callback_params:
+    monitor: "val/cp_wer"
+    mode: "min"
+    patience: 3
+    # NeMo defaults this to 0.001, i.e. 0.1 cpWER points, which would stop on a real if small
+    # gain. Zero counts any improvement.
+    min_delta: 0.0

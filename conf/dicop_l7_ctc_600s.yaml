@@ -1,0 +1,44 @@
+# Ladder rung 7: + 10 minute training chunk.
+#
+# The longest rung. Both corpora are already prepared at this length, so unlike rungs 4 and 5
+# this one needs nothing built:
+#
+#   * AMI uses `ami-sdm_cutset_train_600s.jsonl.gz` -- ~10-minute windows cut at silence by
+#     mt-asr-data-prep/src/window_at_silence.py, so no utterance straddles a boundary. 1481
+#     windows, 215 h, three passes over AMI at different random offsets.
+#   * NOTSOFAR uses the unsuffixed session cutset. Its sessions are 6-8 minutes, i.e. already
+#     shorter than the window, so a 600 s windowing would be the identity on it.
+#
+# A single 600 s item costs roughly 10 + 0.06 x 600 = 45 GiB, so it fits an 80 GB A100 with room
+# to spare and gradient checkpointing stays off. Two would need ~79 GiB, which is why the shared
+# 1000 s budget yields one item per GPU here -- the previous 1200 s value fit exactly two, but
+# only on the 96 GiB card it was measured on.
+defaults:
+  - dicop_l6_ctc_300s
+  - _self_
+
+name: dicop_l7_ctc_600s
+
+model:
+  train_ds:
+    manifest_filepath:
+      - ${oc.env:MANIFEST_DIR}/notsofar1/notsofar1_sdm_train_set_240825.1_train_cutset.jsonl.gz
+      - ${oc.env:MANIFEST_DIR}/ami/ami-sdm_cutset_train_600s.jsonl.gz
+      - ${oc.env:MANIFEST_DIR}/librimix/librimix_cutset_libri2mix_train-clean-100_noisy_30s.jsonl.gz
+      - ${oc.env:MANIFEST_DIR}/librimix/librimix_cutset_libri2mix_train-clean-360_noisy_30s.jsonl.gz
+      - ${oc.env:MANIFEST_DIR}/librimix/librimix_cutset_libri3mix_train-clean-360_noisy_30s.jsonl.gz
+      - ${oc.env:MANIFEST_DIR}/librispeechmix/librispeechmix_custom_cutset_train-3mix.jsonl.gz
+
+    # The 30 s mixture corpora still pack; 1000/30 = 33 items, so this cap is what binds there.
+    max_batch_size: 32
+
+trainer:
+  # 4 GPUs x 1 item of 600 s = 4 per step, so accumulate to reach the >=32 effective batch
+  # the shorter rungs get for free (132/64/32/36 items). The 30 s LibriMix bucket batches 32
+  # per GPU, so an accumulated step mixes buckets and is larger than 32 more often than not.
+  #
+  # Worth being explicit about the trade this makes: 32 items of 600 s is ~5.3 h of audio per
+  # optimizer step against ~1.1 h at the shorter rungs, and correspondingly ~8x fewer steps per
+  # epoch. Matching the ladder on audio instead would mean accum 1 and a 4-item batch. There is
+  # no setting that matches both.
+  accumulate_grad_batches: 8

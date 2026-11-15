@@ -1,0 +1,27 @@
+# @package _global_
+# DiCoW v3.3, greedy, conditioned on DiariZen's diarization. Like the configuration the published numbers were
+# decoded with, this does not inherit /decode/dicow_v3_greedy: it sits directly on configs/base.yaml.
+experiment: "DiCoW_v3_3_greedy_diarizen_full"
+model:
+  whisper_model: "BUT-FIT/DiCoW_v3_3"
+data:
+  use_diar: true
+  # filled in by run.sh (ground truth for scoring, DiariZen for conditioning, matched by index); declared here
+  # because TS-ASR-Whisper's base config does not have the *_diar_cutsets keys
+  dev_cutsets: []
+  dev_diar_cutsets: []
+  eval_cutsets: []
+  eval_diar_cutsets: []
+  use_timestamps: true
+training:
+  decode_only: true
+  eval_metrics_list: [ "cp_wer" ]
+  generation_num_beams: 1
+  dataloader_num_workers: 2
+  per_device_eval_batch_size: 64
+  use_fddt: true
+  save_visualizations: false
+decoding:
+  decoding_ctc_weight: 0
+  condition_on_prev: false
+  length_penalty: 1.0

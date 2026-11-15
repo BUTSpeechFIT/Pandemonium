@@ -1,0 +1,20 @@
+# Ladder rung 5: + 120 s training chunk.
+#
+# As rung 4, one doubling further. 120 s is 1500 encoder frames, so a chunk now spans several
+# sliding windows and the sinks are carrying real cross-window information rather than a
+# formality.
+defaults:
+  - dicop_l4_ctc_60s
+  - _self_
+
+name: dicop_l5_ctc_120s
+
+model:
+  train_ds:
+    manifest_filepath:
+      - ${oc.env:MANIFEST_DIR}/notsofar1/notsofar1_sdm_train_set_240825.1_train_cutset_120s.jsonl.gz
+      - ${oc.env:MANIFEST_DIR}/ami/ami-sdm_cutset_train_120s.jsonl.gz
+      - ${oc.env:MANIFEST_DIR}/librimix/librimix_cutset_libri2mix_train-clean-100_noisy_30s.jsonl.gz
+      - ${oc.env:MANIFEST_DIR}/librimix/librimix_cutset_libri2mix_train-clean-360_noisy_30s.jsonl.gz
+      - ${oc.env:MANIFEST_DIR}/librimix/librimix_cutset_libri3mix_train-clean-360_noisy_30s.jsonl.gz
+      - ${oc.env:MANIFEST_DIR}/librispeechmix/librispeechmix_custom_cutset_train-3mix.jsonl.gz

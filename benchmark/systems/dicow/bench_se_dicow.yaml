@@ -1,0 +1,23 @@
+# @package _global_
+# SE-DiCoW, greedy, conditioned on DiariZen's diarization; self-enrollment only. The eval/dev cutsets
+# (ground truth, for scoring) and their DiariZen counterparts are passed by run.sh, matched by index.
+defaults:
+  - /decode/se_dicow_greedy
+experiment: "SE-DiCoW_greedy_diarizen_full"
+data:
+  use_enrollments: true
+  enrollment_cutsets: null
+  use_diar: true
+  # filled in by run.sh (ground truth for scoring, DiariZen for conditioning, matched by index); declared here
+  # because TS-ASR-Whisper's base config does not have the *_diar_cutsets keys
+  dev_cutsets: []
+  dev_diar_cutsets: []
+  eval_cutsets: []
+  eval_diar_cutsets: []
+  use_timestamps: true
+training:
+  generation_num_beams: 1
+  per_device_eval_batch_size: 64
+  eval_metrics_list: [ "cp_wer" ]
+decoding:
+  decoding_ctc_weight: 0

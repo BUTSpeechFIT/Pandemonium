@@ -1,0 +1,13 @@
+diff --git a/nemo/collections/speechlm2/vllm/salm/audio.py b/nemo/collections/speechlm2/vllm/salm/audio.py
+index 5091616b63..d1cb079832 100644
+--- a/nemo/collections/speechlm2/vllm/salm/audio.py
++++ b/nemo/collections/speechlm2/vllm/salm/audio.py
+@@ -69,7 +69,7 @@ from nemo.utils import logging
+ _SAMPLING_RATE = 16000
+ _AUDIO_CHANNELS = 1
+ _DUMMY_AUDIO_DURATION_S = 40.0
+-_DUMMY_AUDIO_MAX_DURATION_S = 3600.0
++_DUMMY_AUDIO_MAX_DURATION_S = 3700.0  # local: ICSI Bro021 is 60.5 min
+ _DUMMY_AUDIO_TEXT_TOKEN_RESERVE = 64
+ # FastConformer preprocessor hop length, used to derive the smallest
+ # chunk that produces ≥ 2 feature frames (per-feature normalization

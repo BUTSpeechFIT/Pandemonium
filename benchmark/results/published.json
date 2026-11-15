@@ -1,0 +1,619 @@
+{
+ "api_a": {
+  "ami": {
+   "tcpWER@5": 28.65
+  },
+  "dipco": {
+   "tcpWER@5": 29.67
+  },
+  "icsi": {
+   "tcpWER@5": 31.31
+  },
+  "mixer6": {
+   "tcpWER@5": 12.36
+  },
+  "notsofar": {
+   "tcpWER@5": 34.11
+  },
+  "sbc": {
+   "tcpWER@5": 24.31
+  }
+ },
+ "api_b": {
+  "ami": {
+   "tcpWER@5": 27.41
+  },
+  "dipco": {
+   "tcpWER@5": 31.61
+  },
+  "icsi": {
+   "tcpWER@5": 32.73
+  },
+  "mixer6": {
+   "tcpWER@5": 14.24
+  },
+  "notsofar": {
+   "tcpWER@5": 34.84
+  },
+  "sbc": {
+   "tcpWER@5": 24.05
+  }
+ },
+ "api_c": {
+  "ami": {
+   "tcpWER@5": 34.4
+  },
+  "dipco": {
+   "tcpWER@5": 42.16
+  },
+  "icsi": {
+   "tcpWER@5": 34.56
+  },
+  "mixer6": {
+   "tcpWER@5": 16.16
+  },
+  "notsofar": {
+   "tcpWER@5": 42.53
+  },
+  "sbc": {
+   "tcpWER@5": 32.1
+  }
+ },
+ "api_d": {
+  "ami": {
+   "tcpWER@5": 39.37
+  },
+  "dipco": {
+   "tcpWER@5": 77.24
+  },
+  "icsi": {
+   "tcpWER@5": 31.19
+  },
+  "mixer6": {
+   "tcpWER@5": 25.42
+  },
+  "notsofar": {
+   "tcpWER@5": 52.86
+  },
+  "sbc": {
+   "tcpWER@5": 37.88
+  }
+ },
+ "azure": {
+  "ami": {
+   "tcpWER@5": 38.06
+  },
+  "dipco": {
+   "tcpWER@5": 28.59
+  },
+  "icsi": {
+   "tcpWER@5": 39.32
+  },
+  "mixer6": {
+   "tcpWER@5": 10.91
+  },
+  "notsofar": {
+   "tcpWER@5": 32.97
+  },
+  "sbc": {
+   "tcpWER@5": 28.44
+  }
+ },
+ "cocktail": {
+  "ami": {
+   "tcpWER@5": 23.19
+  },
+  "ami_ihm_mix": {
+   "cpWER": 15.17,
+   "tcpWER@5": 15.89
+  },
+  "dipco": {
+   "tcpWER@5": 38.45
+  },
+  "icsi": {
+   "tcpWER@5": 28.33
+  },
+  "libri2mix": {
+   "cpWER": 13.53
+  },
+  "libri2mix_noisy": {
+   "cpWER": 29.36
+  },
+  "libri3mix": {
+   "cpWER": 36.16
+  },
+  "libri3mix_noisy": {
+   "cpWER": 50.93
+  },
+  "lsmix1": {
+   "cpWER": 1.93
+  },
+  "lsmix2": {
+   "cpWER": 5.41
+  },
+  "lsmix3": {
+   "cpWER": 19.57
+  },
+  "mixer6": {
+   "tcpWER@5": 16.18
+  },
+  "notsofar": {
+   "tcpWER@5": 32.78
+  },
+  "nsf_ihm_mix": {
+   "cpWER": 22.07,
+   "tcpWER@5": 23.09
+  },
+  "sbc": {
+   "tcpWER@5": 26.9
+  }
+ },
+ "dicow_v3_3": {
+  "ami_ihm_mix": {
+   "cpWER": 14.48,
+   "tcpWER@5": 15.2
+  },
+  "libri2mix": {
+   "cpWER": 4.04
+  },
+  "libri2mix_noisy": {
+   "cpWER": 10.5
+  },
+  "libri3mix": {
+   "cpWER": 28.45
+  },
+  "libri3mix_noisy": {
+   "cpWER": 36.27
+  },
+  "lsmix1": {
+   "cpWER": 1.89
+  },
+  "lsmix2": {
+   "cpWER": 3.65
+  },
+  "lsmix3": {
+   "cpWER": 22.63
+  },
+  "nsf_ihm_mix": {
+   "cpWER": 17.05,
+   "tcpWER@5": 17.83
+  }
+ },
+ "elevenlabs": {
+  "ami": {
+   "tcpWER@5": 35.54
+  },
+  "dipco": {
+   "tcpWER@5": 36.43
+  },
+  "icsi": {
+   "tcpWER@5": 43.76
+  },
+  "mixer6": {
+   "tcpWER@5": 9.63
+  },
+  "notsofar": {
+   "tcpWER@5": 37.41
+  },
+  "sbc": {
+   "tcpWER@5": 24.5
+  }
+ },
+ "gemini": {
+  "ami": {
+   "cpWER": 45.33
+  },
+  "dipco": {
+   "cpWER": 48.46
+  },
+  "icsi": {
+   "cpWER": 52.03
+  },
+  "mixer6": {
+   "cpWER": 21.27
+  },
+  "notsofar": {
+   "cpWER": 47.75
+  },
+  "sbc": {
+   "cpWER": 41.37
+  }
+ },
+ "mistral": {
+  "ami": {
+   "tcpWER@5": 42.95
+  },
+  "dipco": {
+   "tcpWER@5": 63.62
+  },
+  "icsi": {
+   "tcpWER@5": 46.04
+  },
+  "mixer6": {
+   "tcpWER@5": 19.56
+  },
+  "notsofar": {
+   "tcpWER@5": 58.04
+  },
+  "sbc": {
+   "tcpWER@5": 39.03
+  }
+ },
+ "moss": {
+  "ami": {
+   "tcpWER@5": 32.14
+  },
+  "ami_ihm_mix": {
+   "cpWER": 19.72,
+   "tcpWER@5": 20.08
+  },
+  "dipco": {
+   "tcpWER@5": 39.9
+  },
+  "icsi": {
+   "tcpWER@5": 25.6
+  },
+  "libri2mix": {
+   "cpWER": 24.82
+  },
+  "libri2mix_noisy": {
+   "cpWER": 36.19
+  },
+  "libri3mix": {
+   "cpWER": 55.89
+  },
+  "libri3mix_noisy": {
+   "cpWER": 64.52
+  },
+  "lsmix1": {
+   "cpWER": 3.59
+  },
+  "lsmix2": {
+   "cpWER": 11.29
+  },
+  "lsmix3": {
+   "cpWER": 19.06
+  },
+  "mixer6": {
+   "tcpWER@5": 11.15
+  },
+  "notsofar": {
+   "tcpWER@5": 28.1
+  },
+  "nsf_ihm_mix": {
+   "cpWER": 23.63,
+   "tcpWER@5": 23.9
+  },
+  "sbc": {
+   "tcpWER@5": 22.48
+  }
+ },
+ "mt_parakeet": {
+  "ami": {
+   "tcpWER@5": 20.38
+  },
+  "ami_ihm_mix": {
+   "cpWER": 13.37,
+   "tcpWER@5": 13.83
+  },
+  "dipco": {
+   "tcpWER@5": 35.65
+  },
+  "icsi": {
+   "tcpWER@5": 12.93
+  },
+  "libri2mix": {
+   "cpWER": 24.68
+  },
+  "libri2mix_noisy": {
+   "cpWER": 43.79
+  },
+  "libri3mix": {
+   "cpWER": 62.19
+  },
+  "libri3mix_noisy": {
+   "cpWER": 73.31
+  },
+  "lsmix1": {
+   "cpWER": 2.63
+  },
+  "lsmix2": {
+   "cpWER": 7.43
+  },
+  "lsmix3": {
+   "cpWER": 13.01
+  },
+  "mixer6": {
+   "tcpWER@5": 18.56
+  },
+  "notsofar": {
+   "tcpWER@5": 31.56
+  },
+  "nsf_ihm_mix": {
+   "cpWER": 19.71,
+   "tcpWER@5": 20.2
+  },
+  "sbc": {
+   "tcpWER@5": 26.83
+  }
+ },
+ "nemotron35": {
+  "ami": {
+   "tcpWER@5": 23.57
+  },
+  "ami_ihm_mix": {
+   "cpWER": 11.63,
+   "tcpWER@5": 13.55
+  },
+  "dipco": {
+   "tcpWER@5": 23.24
+  },
+  "icsi": {
+   "tcpWER@5": 13.96
+  },
+  "libri2mix": {
+   "cpWER": 8.44
+  },
+  "libri2mix_noisy": {
+   "cpWER": 27.97
+  },
+  "libri3mix": {
+   "cpWER": 47.87
+  },
+  "libri3mix_noisy": {
+   "cpWER": 62.62
+  },
+  "lsmix1": {
+   "cpWER": 1.57
+  },
+  "lsmix2": {
+   "cpWER": 4.15
+  },
+  "lsmix3": {
+   "cpWER": 8.64
+  },
+  "mixer6": {
+   "tcpWER@5": 12.67
+  },
+  "notsofar": {
+   "tcpWER@5": 28.36
+  },
+  "nsf_ihm_mix": {
+   "cpWER": 15.71,
+   "tcpWER@5": 17.61
+  },
+  "sbc": {
+   "tcpWER@5": 26.51
+  }
+ },
+ "openai": {
+  "ami": {
+   "tcpWER@5": 60.07
+  },
+  "dipco": {
+   "tcpWER@5": 62.66
+  },
+  "icsi": {
+   "tcpWER@5": 59.99
+  },
+  "mixer6": {
+   "tcpWER@5": 28.11
+  },
+  "notsofar": {
+   "tcpWER@5": 56.42
+  },
+  "sbc": {
+   "tcpWER@5": 45.76
+  }
+ },
+ "pandemonium_nemotron": {
+  "ami": {
+   "cpWER": 16.14,
+   "tcpWER@5": 16.76
+  },
+  "ami_ihm_mix": {
+   "cpWER": 11.16,
+   "tcpWER@5": 11.46
+  },
+  "dipco": {
+   "cpWER": 23.52,
+   "tcpWER@5": 24.9
+  },
+  "icsi": {
+   "cpWER": 14.53,
+   "tcpWER@5": 14.82
+  },
+  "libri2mix": {
+   "cpWER": 6.76
+  },
+  "libri2mix_noisy": {
+   "cpWER": 17.81
+  },
+  "libri3mix": {
+   "cpWER": 28.02
+  },
+  "libri3mix_noisy": {
+   "cpWER": 41.76
+  },
+  "lsmix1": {
+   "cpWER": 2.34
+  },
+  "lsmix2": {
+   "cpWER": 3.2
+  },
+  "lsmix3": {
+   "cpWER": 5.17
+  },
+  "mixer6": {
+   "cpWER": 12.03,
+   "tcpWER@5": 12.28
+  },
+  "notsofar": {
+   "cpWER": 17.93,
+   "tcpWER@5": 18.23
+  },
+  "nsf_ihm_mix": {
+   "cpWER": 12.14,
+   "tcpWER@5": 12.33
+  },
+  "sbc": {
+   "cpWER": 18.67,
+   "tcpWER@5": 19.09
+  }
+ },
+ "pandemonium_oracle": {
+  "ami_ihm_mix": {
+   "cpWER": 9.59,
+   "tcpWER@5": 9.71
+  },
+  "libri2mix": {
+   "cpWER": 10.19
+  },
+  "libri2mix_noisy": {
+   "cpWER": 23.25
+  },
+  "libri3mix": {
+   "cpWER": 33.73
+  },
+  "libri3mix_noisy": {
+   "cpWER": 46.62
+  },
+  "lsmix1": {
+   "cpWER": 2.27
+  },
+  "lsmix2": {
+   "cpWER": 3.37
+  },
+  "lsmix3": {
+   "cpWER": 5.48
+  },
+  "nsf_ihm_mix": {
+   "cpWER": 8.81,
+   "tcpWER@5": 8.84
+  }
+ },
+ "pandemonium_precision": {
+  "ami": {
+   "cpWER": 16.88,
+   "tcpWER@5": 17.85
+  },
+  "dipco": {
+   "cpWER": 27.38,
+   "tcpWER@5": 29.89
+  },
+  "icsi": {
+   "cpWER": 18.02,
+   "tcpWER@5": 18.9
+  },
+  "mixer6": {
+   "cpWER": 11.66,
+   "tcpWER@5": 11.93
+  },
+  "notsofar": {
+   "cpWER": 22.33,
+   "tcpWER@5": 23.41
+  },
+  "sbc": {
+   "cpWER": 18.57,
+   "tcpWER@5": 19.14
+  }
+ },
+ "se_dicow": {
+  "ami": {
+   "tcpWER@5": 19.28
+  },
+  "ami_ihm_mix": {
+   "cpWER": 14.42,
+   "tcpWER@5": 15.12
+  },
+  "dipco": {
+   "tcpWER@5": 35.98
+  },
+  "icsi": {
+   "tcpWER@5": 20.73
+  },
+  "libri2mix": {
+   "cpWER": 3.49
+  },
+  "libri2mix_noisy": {
+   "cpWER": 9.88
+  },
+  "libri3mix": {
+   "cpWER": 26.61
+  },
+  "libri3mix_noisy": {
+   "cpWER": 35.09
+  },
+  "lsmix1": {
+   "cpWER": 1.82
+  },
+  "lsmix2": {
+   "cpWER": 3.13
+  },
+  "lsmix3": {
+   "cpWER": 21.94
+  },
+  "mixer6": {
+   "tcpWER@5": 12.2
+  },
+  "notsofar": {
+   "tcpWER@5": 25.83
+  },
+  "nsf_ihm_mix": {
+   "cpWER": 16.9,
+   "tcpWER@5": 17.68
+  },
+  "sbc": {
+   "tcpWER@5": 21.58
+  }
+ },
+ "vibevoice": {
+  "ami": {
+   "tcpWER@5": 41.88
+  },
+  "ami_ihm_mix": {
+   "cpWER": 23.16,
+   "tcpWER@5": 23.71
+  },
+  "dipco": {
+   "tcpWER@5": 64.73
+  },
+  "icsi": {
+   "tcpWER@5": 42.48
+  },
+  "libri2mix": {
+   "cpWER": 57.87
+  },
+  "libri2mix_noisy": {
+   "cpWER": 64.81
+  },
+  "libri3mix": {
+   "cpWER": 82.06
+  },
+  "libri3mix_noisy": {
+   "cpWER": 87.83
+  },
+  "lsmix1": {
+   "cpWER": 2.18
+  },
+  "lsmix2": {
+   "cpWER": 50.9
+  },
+  "lsmix3": {
+   "cpWER": 73.79
+  },
+  "mixer6": {
+   "tcpWER@5": 12.01
+  },
+  "notsofar": {
+   "tcpWER@5": 36.33
+  },
+  "nsf_ihm_mix": {
+   "cpWER": 25.94,
+   "tcpWER@5": 26.38
+  },
+  "sbc": {
+   "tcpWER@5": 29.53
+  }
+ }
+}

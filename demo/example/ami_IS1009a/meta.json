@@ -1,0 +1,28 @@
+{
+ "name": "ami_IS1009a",
+ "title": "AMI meeting IS1009a (4 speakers, 14 min)",
+ "description": "A design-team meeting from the AMI Meeting Corpus test set, single distant microphone (SDM).",
+ "audio": "audio.mp3",
+ "duration_s": 839.0,
+ "num_speakers": 4,
+ "source": {
+  "corpus": "AMI Meeting Corpus",
+  "meeting": "IS1009a",
+  "microphone": "single distant microphone (Array1-01)",
+  "split": "test",
+  "url": "https://groups.inf.ed.ac.uk/ami/corpus/",
+  "license": "CC BY 4.0",
+  "license_url": "https://creativecommons.org/licenses/by/4.0/",
+  "attribution": "AMI Meeting Corpus, University of Edinburgh and partners (Carletta et al., 2005), CC BY 4.0. Audio re-encoded to mono MP3; transcripts produced by Pandemonium."
+ },
+ "produced_with": {
+  "diarization": "nvidia/Nemotron-3-Diarization (NeMo, offline 30.4 s setting), soft probabilities",
+  "asr": "Pandemonium, BUT-FIT/Pandemonium cp_wer=0.1597-epoch=16.ckpt, bf16",
+  "pipeline": "demo/pipeline.py DemoPipeline (same code as the live demo)"
+ },
+ "scores": {
+  "cpWER": 14.73,
+  "tcpWER_collar5s": 15.44,
+  "reference_words": 1962
+ }
+}

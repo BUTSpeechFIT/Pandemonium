@@ -1,0 +1,36 @@
+# Ladder rung 2: + local attention.
+#
+# Sliding-window self-attention in place of full context, so encoder memory grows linearly rather
+# than quadratically in session length. This is what makes the >30 s rungs possible at all; on a
+# 30 s chunk it is close to a no-op on cost, and the row measures what the topology change alone
+# costs in accuracy.
+#
+# The attention sinks come with it rather than as a separate rung: a purely local encoder has no
+# path for information to cross the window, and the sinks are that path. `learnable_sink_tokens`
+# prepends them instead of promoting whichever frames sit at the front of the input.
+defaults:
+  - dicop_l1_tdt_global
+  - _self_
+
+name: dicop_l2_tdt_local
+
+model:
+  encoder:
+    self_attention_model: rel_pos_local_attn
+    att_context_size: [256, 256]   # ~20 s each way at 12.5 Hz
+    global_tokens: 4
+    global_tokens_spacing: 1
+    learnable_sink_tokens: true
+    global_attn_separate: true
+    init_global_attn_from_local: true
+    # The Longformer path, not scaled dot-product attention: `rel_pos_local_attn` has its own
+    # banded implementation and does not go through SDPA.
+    use_pytorch_sdpa: false
+
+    # Sinks start gated shut, so the warm start is undisturbed until the gate opens. These four
+    # values are conf/dicop_ctc.yaml's, copied so that rung 3 changes the head and nothing else.
+    sink_gate_init: -8.0
+
+  sink_gate_warmup_steps: 0
+  sink_lr_multiplier: 0.4
+  sink_gate_lr_multiplier: 300.0

@@ -1,0 +1,17 @@
+{
+ "cpWER": 14.73,
+ "tcpWER_collar5s": 15.44,
+ "reference_words": 1962,
+ "errors": {
+  "substitutions": 129,
+  "insertions": 78,
+  "deletions": 82
+ },
+ "speaker_mapping": {
+  "FIE088": "Speaker 1",
+  "FIO089": "Speaker 2",
+  "FIO084": "Speaker 4",
+  "FIO087": "Speaker 3"
+ },
+ "normalization": "whisper_nsf (as in the paper's evaluation)"
+}

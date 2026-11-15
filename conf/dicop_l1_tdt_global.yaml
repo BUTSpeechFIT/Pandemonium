@@ -1,0 +1,17 @@
+# Ladder rung 1: DiCoP (Parakeet, 30 s, global attention, TDT).
+#
+# The row the rest of the table is measured against -- Parakeet swapped in for DiCoW's Whisper,
+# everything else held to the DiCoW recipe. Full self-attention and the pretrained TDT head, both
+# exactly as `conf/dicop.yaml` ships them; the only additions are the shared data recipe and the
+# 30 s training chunk.
+#
+#   python train.py --config-name dicop_l1_tdt_global exp_manager.exp_dir=exps/
+defaults:
+  - dicop
+  - dicop_ladder_data
+  - _self_
+
+name: dicop_l1_tdt_global
+
+# Global attention over a 30 s window is 375 frames, so the (B, H, T, T) score tensor is small
+# and needs none of the long-form machinery the later rungs bring in.

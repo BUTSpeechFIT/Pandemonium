@@ -1,0 +1,24 @@
+# Ladder rung 4: + 60 s training chunk.
+#
+# Same model as rung 3; only the training cutsets change. The two meeting corpora move to 60 s
+# windows because they are the ones with conversation structure to learn from. The four synthetic
+# mixture corpora stay as they are -- a LibriMix item is a fixed-length mixture of read speech, so
+# a longer window would be concatenation, not context.
+#
+# `max_batch_duration` is a per-batch budget and needs no change: 60 s items simply mean half as
+# many per batch.
+defaults:
+  - dicop_l3_ctc_local
+  - _self_
+
+name: dicop_l4_ctc_60s
+
+model:
+  train_ds:
+    manifest_filepath:
+      - ${oc.env:MANIFEST_DIR}/notsofar1/notsofar1_sdm_train_set_240825.1_train_cutset_60s.jsonl.gz
+      - ${oc.env:MANIFEST_DIR}/ami/ami-sdm_cutset_train_60s.jsonl.gz
+      - ${oc.env:MANIFEST_DIR}/librimix/librimix_cutset_libri2mix_train-clean-100_noisy_30s.jsonl.gz
+      - ${oc.env:MANIFEST_DIR}/librimix/librimix_cutset_libri2mix_train-clean-360_noisy_30s.jsonl.gz
+      - ${oc.env:MANIFEST_DIR}/librimix/librimix_cutset_libri3mix_train-clean-360_noisy_30s.jsonl.gz
+      - ${oc.env:MANIFEST_DIR}/librispeechmix/librispeechmix_custom_cutset_train-3mix.jsonl.gz

@@ -1,0 +1,6 @@
+#!/bin/bash
+# `./admin <command> ...` = admin.py in the demo's conda environment, from any shell
+# ($DEMO_PYTHON, else the pandemonium-demo conda env, else python on PATH).
+env_python="$HOME/miniconda3/envs/pandemonium-demo/bin/python"
+[ -x "$env_python" ] || env_python=python
+exec "${DEMO_PYTHON:-$env_python}" "$(dirname "$0")/admin.py" "$@"
